@@ -790,7 +790,7 @@
             </div>
         </div>
         
-        <div class="tool-card" onclick="openToolModal('number-pages')">
+        <div class="tool-card" onclick="openPage('numberingpdf.html')">
             <div class="tool-icon">
                 <i class="fas fa-list-ol"></i>
             </div>
@@ -1128,6 +1128,10 @@
             document.getElementById(toolId + '-modal').style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
+        //open page
+        function openPage(page) {
+    window.location.href = page; // This redirects to the specified HTML page
+  }
         
         // Close modal
         function closeModal(modalId) {
