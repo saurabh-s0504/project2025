@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Search | PDF Toolkit Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4285f4;
+            --secondary: #ffffff;
+            --accent: #ea4335;
+            --success: #34a853;
+            --light: #ffffff;
+            --text-dark: #202124;
+            --text-muted: #5f6368;
+            --border: #dadce0;
+        }
+        
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+        }
+        
+        .navbar {
+            background-color: var(--light) !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .navbar-brand {
+            font-weight: 500;
+            color: var(--primary) !important;
+        }
+        
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary) !important;
+        }
+        
+        .tool-card {
+            background: var(--light);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .tool-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.25rem;
+        }
+        
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--light);
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(66, 133, 244, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3367d6;
+            border-color: #3367d6;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: rgba(66, 133, 244, 0.1);
+        }
+        
+        .preview-container {
+            position: relative;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f1f3f4;
+            margin-bottom: 1rem;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .pdf-viewer {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .result-card {
+            background: rgba(52, 168, 83, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .progress-thin {
+            height: 4px;
+            background-color: #f1f3f4;
+        }
+        
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(66, 133, 244, 0.1);
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+        
+        footer {
+            background-color: var(--light) !important;
+            border-top: 1px solid var(--border);
+        }
+        
+        .search-controls {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        .spinner-border {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-width: 0.2em;
+        }
+        
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            background-color: white;
+        }
+        
+        .search-result-item {
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+        
+        .search-result-item:hover {
+            background-color: rgba(66, 133, 244, 0.05);
+        }
+        
+        .search-result-item.active {
+            background-color: rgba(66, 133, 244, 0.1);
+            border-left: 3px solid var(--primary);
+        }
+        
+        .search-highlight {
+            background-color: rgba(255, 255, 0, 0.5);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        
+        .page-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .ad-container {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-label {
+            font-size: 0.75rem;
+            color: #5f6368;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .ad-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            border-radius: 4px;
+        }
+        
+        .error-message {
+            color: var(--accent);
+            margin-top: 1rem;
+            text-align: center;
+        }
+        
+        .text-match-count {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-file-pdf me-2"></i>PDF Toolkit Pro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link active" href="#">Tools</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Support</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="tool-card mb-3">
+                    <div class="tool-header">
+                        <h4 class="mb-0"><i class="fas fa-search me-2"></i>PDF Search</h4>
+                        <p class="mb-0 opacity-75">Search text within PDF documents</p>
+                    </div>
+                    <div class="p-3">
+                        <div id="uploadArea" class="upload-zone mb-3">
+                            <div class="upload-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <h5 class="mb-2">Upload PDF Document</h5>
+                            <p class="text-muted mb-3">Drag & drop your PDF file or click to browse</p>
+                            <button class="btn btn-primary px-3" id="uploadPdfBtn">
+                                <i class="fas fa-upload me-1"></i>Select PDF
+                            </button>
+                            <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                            <div id="fileError" class="error-message" style="display: none;"></div>
+                        </div>
+                        
+                        <div id="searchContainer" style="display: none;">
+                            <div class="search-controls mb-3">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Enter text to search..." autocomplete="off">
+                                    <button class="btn btn-primary" id="searchBtn">
+                                        <i class="fas fa-search me-1"></i>Search
+                                    </button>
+                                    <button class="btn btn-outline-primary" id="clearSearchBtn">
+                                        <i class="fas fa-times me-1"></i>Clear
+                                    </button>
+                                </div>
+                                <div class="d-flex align-items-center mt-2">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="caseSensitiveCheck">
+                                        <label class="form-check-label small" for="caseSensitiveCheck">Case sensitive</label>
+                                    </div>
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" type="checkbox" id="wholeWordCheck">
+                                        <label class="form-check-label small" for="wholeWordCheck">Whole words only</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="highlightAllCheck" checked>
+                                        <label class="form-check-label small" for="highlightAllCheck">Highlight all</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="preview-container mb-3" id="previewContainer">
+                                <iframe id="pdfViewer" class="pdf-viewer" style="display: none;"></iframe>
+                                <div id="noPdfMessage" class="text-center text-muted">
+                                    <i class="fas fa-file-pdf fa-3x mb-2"></i>
+                                    <p>PDF will appear here after upload</p>
+                                </div>
+                            </div>
+                            
+                            <div id="searchResultsContainer" style="display: none;">
+                                <h6 class="mb-2"><i class="fas fa-list me-2"></i>Search Results <span id="matchCount" class="text-match-count">0 matches</span></h6>
+                                <div class="search-results" id="searchResults">
+                                    <!-- Search results will be inserted here -->
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-primary" id="prevMatchBtn" disabled>
+                                        <i class="fas fa-arrow-up me-1"></i>Previous
+                                    </button>
+                                    <button class="btn btn-outline-primary" id="nextMatchBtn" disabled>
+                                        <i class="fas fa-arrow-down me-1"></i>Next
+                                    </button>
+                                </div>
+                                <button class="btn btn-outline-primary" id="newSearchBtn">
+                                    <i class="fas fa-redo me-1"></i>New Search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Fast Search</h6>
+                            <p class="text-muted small text-center">Quickly find text in large PDFs</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-highlighter"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Highlight Matches</h6>
+                            <p class="text-muted small text-center">See all matches highlighted</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-file-export"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Export Results</h6>
+                            <p class="text-muted small text-center">Save search results as text</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-file-word"></i>
+                            </div>
+                            <h6 class="text-center mb-2">OCR Support</h6>
+                            <p class="text-muted small text-center">Search scanned PDFs with OCR</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Ad Container -->
+                <div class="ad-container mb-4">
+                    <div class="ad-label">Advertisement</div>
+                    <div class="ad-placeholder">
+                        <div>Ad Space (300x250)</div>
+                    </div>
+                </div>
+                
+                <div class="p-3 mb-3 bg-white rounded border">
+                    <h5 class="mb-2"><i class="fas fa-tools me-2"></i>Other Tools</h5>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-primary">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                                <div>PDF Scanner</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-success">
+                                    <i class="fas fa-share-alt"></i>
+                                </div>
+                                <div>Share PDF</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-warning">
+                                    <i class="fas fa-compress-alt"></i>
+                                </div>
+                                <div>Compress PDF</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-danger">
+                                    <i class="fas fa-font"></i>
+                                </div>
+                                <div>OCR PDF</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="p-3 bg-white rounded border">
+                    <h5 class="mb-2"><i class="fas fa-lightbulb me-2"></i>Search Tips</h5>
+                    <ul class="small text-muted">
+                        <li class="mb-2">Use quotes for exact phrase matches</li>
+                        <li class="mb-2">Try different variations of your search term</li>
+                        <li class="mb-2">Enable case sensitivity for precise matches</li>
+                        <li class="mb-2">Use whole word option to avoid partial matches</li>
+                        <li>Navigate through results with Previous/Next buttons</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-3 mt-4 bg-white border-top">
+        <div class="container text-center">
+            <p class="text-muted small mb-0">&copy; 2023 PDF Toolkit Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- PDF.js for PDF rendering and text extraction -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Set PDF.js worker path
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const uploadPdfBtn = document.getElementById('uploadPdfBtn');
+            const fileInput = document.getElementById('fileInput');
+            const fileError = document.getElementById('fileError');
+            const searchContainer = document.getElementById('searchContainer');
+            const previewContainer = document.getElementById('previewContainer');
+            const pdfViewer = document.getElementById('pdfViewer');
+            const noPdfMessage = document.getElementById('noPdfMessage');
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const clearSearchBtn = document.getElementById('clearSearchBtn');
+            const caseSensitiveCheck = document.getElementById('caseSensitiveCheck');
+            const wholeWordCheck = document.getElementById('wholeWordCheck');
+            const highlightAllCheck = document.getElementById('highlightAllCheck');
+            const searchResultsContainer = document.getElementById('searchResultsContainer');
+            const searchResults = document.getElementById('searchResults');
+            const matchCount = document.getElementById('matchCount');
+            const prevMatchBtn = document.getElementById('prevMatchBtn');
+            const nextMatchBtn = document.getElementById('nextMatchBtn');
+            const newSearchBtn = document.getElementById('newSearchBtn');
+
+            // State variables
+            let pdfDoc = null;
+            let pdfTextContent = [];
+            let searchMatches = [];
+            let currentMatchIndex = -1;
+            let searchTerm = '';
+            let isCaseSensitive = false;
+            let isWholeWord = false;
+            let highlightAll = true;
+
+            // Initialize the application
+            function init() {
+                // Event listeners
+                uploadPdfBtn.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', handleFileSelect);
+                searchBtn.addEventListener('click', performSearch);
+                clearSearchBtn.addEventListener('click', clearSearch);
+                prevMatchBtn.addEventListener('click', goToPreviousMatch);
+                nextMatchBtn.addEventListener('click', goToNextMatch);
+                newSearchBtn.addEventListener('click', resetSearch);
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') performSearch();
+                });
+                caseSensitiveCheck.addEventListener('change', (e) => {
+                    isCaseSensitive = e.target.checked;
+                });
+                wholeWordCheck.addEventListener('change', (e) => {
+                    isWholeWord = e.target.checked;
+                });
+                highlightAllCheck.addEventListener('change', (e) => {
+                    highlightAll = e.target.checked;
+                });
+
+                // Initialize settings
+                isCaseSensitive = caseSensitiveCheck.checked;
+                isWholeWord = wholeWordCheck.checked;
+                highlightAll = highlightAllCheck.checked;
+            }
+
+            // Handle PDF file selection
+            function handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                // Check if file is PDF
+                if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                    fileError.textContent = 'Please select a PDF file';
+                    fileError.style.display = 'block';
+                    return;
+                }
+
+                fileError.style.display = 'none';
+
+                // Show loading state
+                uploadPdfBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Loading...';
+                uploadPdfBtn.disabled = true;
+
+                // Process the PDF file
+                processPdfFile(file);
+            }
+
+            // Process PDF file
+            function processPdfFile(file) {
+                const fileReader = new FileReader();
+
+                fileReader.onload = function() {
+                    const typedArray = new Uint8Array(this.result);
+
+                    // Load the PDF document
+                    pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
+                        pdfDoc = pdf;
+                        
+                        // Display PDF in viewer
+                        displayPdf(typedArray);
+                        
+                        // Extract text from all pages
+                        extractAllText(pdf);
+                        
+                        // Show search interface
+                        uploadArea.style.display = 'none';
+                        searchContainer.style.display = 'block';
+                        
+                    }).catch(function(error) {
+                        console.error('PDF loading error:', error);
+                        fileError.textContent = 'Error loading PDF. Please try another file.';
+                        fileError.style.display = 'block';
+                        uploadPdfBtn.innerHTML = '<i class="fas fa-upload me-1"></i>Select PDF';
+                        uploadPdfBtn.disabled = false;
+                    });
+                };
+
+                fileReader.onerror = function() {
+                    fileError.textContent = 'Error reading file. Please try again.';
+                    fileError.style.display = 'block';
+                    uploadPdfBtn.innerHTML = '<i class="fas fa-upload me-1"></i>Select PDF';
+                    uploadPdfBtn.disabled = false;
+                };
+
+                fileReader.readAsArrayBuffer(file);
+            }
+
+            // Display PDF in viewer
+            function displayPdf(pdfData) {
+                const blob = new Blob([pdfData], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                pdfViewer.src = url;
+                pdfViewer.style.display = 'block';
+                noPdfMessage.style.display = 'none';
+            }
+
+            // Extract text from all pages
+            function extractAllText(pdf) {
+                pdfTextContent = [];
+                const numPages = pdf.numPages;
+                let pagesProcessed = 0;
+                
+                // Extract text from each page
+                for (let i = 1; i <= numPages; i++) {
+                    pdf.getPage(i).then(function(page) {
+                        return page.getTextContent();
+                    }).then(function(textContent) {
+                        const pageText = textContent.items.map(item => item.str).join(' ');
+                        pdfTextContent.push({
+                            page: pagesProcessed + 1,
+                            text: pageText
+                        });
+                        
+                        pagesProcessed++;
+                        
+                        // When all pages are processed
+                        if (pagesProcessed === numPages) {
+                            uploadPdfBtn.innerHTML = '<i class="fas fa-upload me-1"></i>Select PDF';
+                            uploadPdfBtn.disabled = false;
+                        }
+                    }).catch(function(error) {
+                        console.error('Text extraction error:', error);
+                        pagesProcessed++;
+                    });
+                }
+            }
+
+            // Perform search
+            function performSearch() {
+                searchTerm = searchInput.value.trim();
+                
+                if (!searchTerm) {
+                    fileError.textContent = 'Please enter a search term';
+                    fileError.style.display = 'block';
+                    return;
+                }
+                
+                if (!pdfDoc || pdfTextContent.length === 0) {
+                    fileError.textContent = 'PDF not fully loaded yet';
+                    fileError.style.display = 'block';
+                    return;
+                }
+                
+                fileError.style.display = 'none';
+                searchResults.innerHTML = '';
+                searchMatches = [];
+                currentMatchIndex = -1;
+                
+                // Show loading state
+                searchBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Searching...';
+                searchBtn.disabled = true;
+                
+                // Create search regex
+                let regexPattern = searchTerm;
+                if (isWholeWord) {
+                    regexPattern = `\\b${regexPattern}\\b`;
+                }
+                
+                const regexFlags = isCaseSensitive ? 'g' : 'gi';
+                let searchRegex;
+                
+                try {
+                    searchRegex = new RegExp(regexPattern, regexFlags);
+                } catch (e) {
+                    fileError.textContent = 'Invalid search pattern';
+                    fileError.style.display = 'block';
+                    searchBtn.innerHTML = '<i class="fas fa-search me-1"></i>Search';
+                    searchBtn.disabled = false;
+                    return;
+                }
+                
+                // Search through each page's text
+                pdfTextContent.forEach((pageContent, pageIndex) => {
+                    const pageText = pageContent.text;
+                    const pageNumber = pageContent.page;
+                    let match;
+                    
+                    while ((match = searchRegex.exec(pageText)) !== null) {
+                        searchMatches.push({
+                            page: pageNumber,
+                            index: match.index,
+                            text: match[0],
+                            before: pageText.substring(Math.max(0, match.index - 20), match.index),
+                            after: pageText.substring(match.index + match[0].length, match.index + match[0].length + 20)
+                        });
+                    }
+                });
+                
+                // Update UI with results
+                updateSearchResults();
+                
+                // Enable/disable navigation buttons
+                prevMatchBtn.disabled = searchMatches.length === 0;
+                nextMatchBtn.disabled = searchMatches.length === 0;
+                
+                // Reset search button
+                searchBtn.innerHTML = '<i class="fas fa-search me-1"></i>Search';
+                searchBtn.disabled = false;
+                
+                // Show results container
+                searchResultsContainer.style.display = 'block';
+                
+                // If matches found, go to first match
+                if (searchMatches.length > 0) {
+                    currentMatchIndex = 0;
+                    highlightCurrentMatch();
+                }
+            }
+
+            // Update search results list
+            function updateSearchResults() {
+                searchResults.innerHTML = '';
+                matchCount.textContent = `${searchMatches.length} ${searchMatches.length === 1 ? 'match' : 'matches'}`;
+                
+                if (searchMatches.length === 0) {
+                    searchResults.innerHTML = '<div class="text-muted">No matches found</div>';
+                    return;
+                }
+                
+                // Group matches by page
+                const matchesByPage = {};
+                searchMatches.forEach((match, index) => {
+                    if (!matchesByPage[match.page]) {
+                        matchesByPage[match.page] = [];
+                    }
+                    matchesByPage[match.page].push({
+                        ...match,
+                        globalIndex: index
+                    });
+                });
+                
+                // Create result items
+                for (const page in matchesByPage) {
+                    const pageHeader = document.createElement('div');
+                    pageHeader.className = 'fw-bold small mt-2 mb-1';
+                    pageHeader.textContent = `Page ${page}`;
+                    searchResults.appendChild(pageHeader);
+                    
+                    matchesByPage[page].forEach(match => {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = `search-result-item ${match.globalIndex === currentMatchIndex ? 'active' : ''}`;
+                        resultItem.innerHTML = `
+                            <div class="small text-muted">...${match.before}<span class="search-highlight">${match.text}</span>${match.after}...</div>
+                        `;
+                        
+                        resultItem.addEventListener('click', () => {
+                            currentMatchIndex = match.globalIndex;
+                            highlightCurrentMatch();
+                            updateResultsListHighlight();
+                        });
+                        
+                        searchResults.appendChild(resultItem);
+                    });
+                }
+            }
+
+            // Highlight current match in PDF
+            function highlightCurrentMatch() {
+                if (currentMatchIndex < 0 || currentMatchIndex >= searchMatches.length) return;
+                
+                const match = searchMatches[currentMatchIndex];
+                
+                // Scroll to page in PDF viewer
+                pdfViewer.contentWindow.PDFViewerApplication.page = match.page;
+                
+                // Highlight text (this would require more advanced PDF.js integration)
+                // For now, we'll just show which result is active in the list
+                updateResultsListHighlight();
+            }
+
+            // Update highlights in results list
+            function updateResultsListHighlight() {
+                const items = searchResults.querySelectorAll('.search-result-item');
+                items.forEach((item, index) => {
+                    item.classList.toggle('active', index === currentMatchIndex);
+                });
+            }
+
+            // Go to previous match
+            function goToPreviousMatch() {
+                if (searchMatches.length === 0) return;
+                
+                currentMatchIndex--;
+                if (currentMatchIndex < 0) {
+                    currentMatchIndex = searchMatches.length - 1;
+                }
+                
+                highlightCurrentMatch();
+            }
+
+            // Go to next match
+            function goToNextMatch() {
+                if (searchMatches.length === 0) return;
+                
+                currentMatchIndex++;
+                if (currentMatchIndex >= searchMatches.length) {
+                    currentMatchIndex = 0;
+                }
+                
+                highlightCurrentMatch();
+            }
+
+            // Clear search results
+            function clearSearch() {
+                searchInput.value = '';
+                searchResults.innerHTML = '';
+                searchResultsContainer.style.display = 'none';
+                currentMatchIndex = -1;
+                searchMatches = [];
+                prevMatchBtn.disabled = true;
+                nextMatchBtn.disabled = true;
+            }
+
+            // Reset search and start new
+            function resetSearch() {
+                clearSearch();
+                searchInput.focus();
+            }
+
+            // Initialize the application
+            init();
+        });
+    </script>
+</body>
+</html>
