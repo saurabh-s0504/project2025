@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -291,6 +292,7 @@
         }
     </style>
 </head>
+
 <body data-theme="light">
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light">
@@ -348,23 +350,25 @@
                             </button>
                             <input type="file" id="fileInput" accept=".pdf" style="display: none;">
                         </div>
-                        
+
                         <!-- Conversion Options -->
                         <div class="conversion-options" id="optionsContainer" style="display: none;">
                             <h5 class="mb-3"><i class="fas fa-cog me-2"></i>Conversion Options</h5>
-                            
+
                             <div class="mb-3">
                                 <label class="form-label">Output Format</label>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="outputFormat" id="formatXlsx" value="xlsx" checked>
+                                    <input class="form-check-input" type="radio" name="outputFormat" id="formatXlsx"
+                                        value="xlsx" checked>
                                     <label class="form-check-label" for="formatXlsx">Excel Workbook (.xlsx)</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="outputFormat" id="formatCsv" value="csv">
+                                    <input class="form-check-input" type="radio" name="outputFormat" id="formatCsv"
+                                        value="csv">
                                     <label class="form-check-label" for="formatCsv">CSV (.csv)</label>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label class="form-label">Table Detection</label>
                                 <div class="form-check form-switch">
@@ -373,17 +377,18 @@
                                 </div>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="mergeSimilarTables">
-                                    <label class="form-check-label" for="mergeSimilarTables">Merge similar tables</label>
+                                    <label class="form-check-label" for="mergeSimilarTables">Merge similar
+                                        tables</label>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label for="pageRange" class="form-label">Page Range</label>
                                 <input type="text" class="form-control" id="pageRange" placeholder="e.g. 1-3,5,7-9">
                                 <div class="form-text">Leave blank to process all pages</div>
                             </div>
                         </div>
-                        
+
                         <!-- Progress Container -->
                         <div id="progressContainer" class="mt-3" style="display: none;">
                             <div class="d-flex justify-content-between mb-1">
@@ -391,28 +396,29 @@
                                 <small id="progressPercent">0%</small>
                             </div>
                             <div class="progress progress-thin">
-                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
-                                     role="progressbar" style="width: 0%"></div>
+                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated"
+                                    role="progressbar" style="width: 0%"></div>
                             </div>
                         </div>
-                        
+
                         <!-- Result Container -->
                         <div id="resultContainer" class="result-card p-4" style="display: none;">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
-                                    <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>Conversion Successful!</h5>
+                                    <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>Conversion
+                                        Successful!</h5>
                                     <p class="text-muted mb-0" id="fileInfo">PDF converted to Excel</p>
                                 </div>
                                 <span class="badge bg-success" id="conversionResult">1 file created</span>
                             </div>
-                            
+
                             <div class="mb-3" id="tablesInfo" style="display: none;">
                                 <div class="alert alert-info">
                                     <i class="fas fa-info-circle me-2"></i>
                                     <span id="tablesCount">3 tables</span> detected in your document
                                 </div>
                             </div>
-                            
+
                             <div class="d-flex flex-column flex-md-row gap-2 justify-content-end mt-3">
                                 <button id="downloadBtn" class="btn btn-primary">
                                     <i class="fas fa-file-excel me-2"></i>Download Excel File
@@ -424,7 +430,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Features Section -->
                 <div class="row g-4 mb-4">
                     <div class="col-md-4">
@@ -433,7 +439,8 @@
                                 <i class="fas fa-shield-alt"></i>
                             </div>
                             <h6 class="text-center">Secure Processing</h6>
-                            <p class="text-muted small text-center">Files are processed in your browser and never uploaded to our servers.</p>
+                            <p class="text-muted small text-center">Files are processed in your browser and never
+                                uploaded to our servers.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -442,7 +449,8 @@
                                 <i class="fas fa-table"></i>
                             </div>
                             <h6 class="text-center">Table Detection</h6>
-                            <p class="text-muted small text-center">Advanced algorithms to accurately detect and extract tables.</p>
+                            <p class="text-muted small text-center">Advanced algorithms to accurately detect and extract
+                                tables.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -451,12 +459,13 @@
                                 <i class="fas fa-file-export"></i>
                             </div>
                             <h6 class="text-center">Multiple Formats</h6>
-                            <p class="text-muted small text-center">Export to Excel (.xlsx) or CSV format for maximum compatibility.</p>
+                            <p class="text-muted small text-center">Export to Excel (.xlsx) or CSV format for maximum
+                                compatibility.</p>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Sidebar Column -->
             <div class="col-lg-4">
                 <!-- Ad Space -->
@@ -468,46 +477,46 @@
                         <button class="btn btn-sm btn-primary">Learn More</button>
                     </div>
                 </div>
-                
+
                 <!-- Other Tools -->
                 <div class="tool-card p-4 mb-4">
                     <h5 class="mb-3"><i class="fas fa-tools me-2"></i>Other Tools</h5>
                     <div class="list-group list-group-flush">
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center" onclick="openPage('pdforganizer.html')">
                                 <div class="me-3 text-primary">
+                                    <i class="fas fa-folder-tree"></i> <!-- Organization icon -->
+                                </div>
+                                <div>PDF Organizer</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center" onclick="openPage('pdfmerger.html')">
+                                <div class="me-3 text-success">
                                     <i class="fas fa-object-group"></i>
                                 </div>
                                 <div>PDF Merger</div>
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3 text-success">
-                                    <i class="fas fa-file-word"></i>
+                            <div class="d-flex align-items-center" onclick="openPage('pdfsplitter.html')">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-cut"></i>
                                 </div>
-                                <div>PDF to Word</div>
+                                <div>PDF Splitter</div>
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3 text-warning">
-                                    <i class="fas fa-file-image"></i>
+                            <div class="d-flex align-items-center" onclick="openPage('pdftoexcel.html')">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-file-excel"></i>
                                 </div>
-                                <div>PDF to Images</div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3 text-danger">
-                                    <i class="fas fa-file-pdf"></i>
-                                </div>
-                                <div>Excel to PDF</div>
+                                <div>PDF to Excel</div>
                             </div>
                         </a>
                     </div>
                 </div>
-                
+
                 <!-- Ad Space -->
                 <div class="ad-card">
                     <div>
@@ -526,7 +535,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 mb-4 mb-md-0">
-                    <h5 class="mb-3">PDF Toolkit</h5>
+                    <h5 class="mb-3">PDF-MAFIA</h5>
                     <p class="text-muted small">Your complete PDF solution for all document needs.</p>
                 </div>
                 <div class="col-md-4 mb-4 mb-md-0">
@@ -534,8 +543,10 @@
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#">Home</a></li>
                         <li class="mb-2"><a href="#">Tools</a></li>
+                        <!--
                         <li class="mb-2"><a href="#">Pricing</a></li>
                         <li><a href="#">Contact</a></li>
+                        -->
                     </ul>
                 </div>
                 <div class="col-md-4">
@@ -550,7 +561,7 @@
             </div>
             <hr class="my-4" style="border-color: var(--text-light); opacity: 0.2;">
             <div class="text-center text-muted small">
-                &copy; 2023 PDF Toolkit. All rights reserved.
+                &copy; 2025 PDF-MAFIA. All rights reserved.
             </div>
         </div>
     </footer>
@@ -560,7 +571,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // DOM Elements
             const uploadArea = document.getElementById('uploadArea');
             const browseBtn = document.getElementById('browseBtn');
@@ -578,7 +589,7 @@
             const downloadBtn = document.getElementById('downloadBtn');
             const newConvertBtn = document.getElementById('newConvertBtn');
             const themeToggle = document.getElementById('themeToggle');
-            
+
             // Variables
             let pdfFile = null;
             let excelData = null;
@@ -590,31 +601,31 @@
                 const savedTheme = localStorage.getItem('theme') || 'light';
                 document.body.setAttribute('data-theme', savedTheme);
                 updateThemeIcon(savedTheme);
-                
+
                 // Event listeners
                 browseBtn.addEventListener('click', () => fileInput.click());
                 fileInput.addEventListener('change', handleFileSelect);
                 downloadBtn.addEventListener('click', downloadExcelFile);
                 newConvertBtn.addEventListener('click', reset);
                 themeToggle.addEventListener('click', toggleTheme);
-                
+
                 // Drag and drop for files
                 uploadArea.addEventListener('dragover', (e) => {
                     e.preventDefault();
                     uploadArea.style.borderColor = 'var(--primary)';
                     uploadArea.style.backgroundColor = 'rgba(108, 92, 231, 0.05)';
                 });
-                
+
                 uploadArea.addEventListener('dragleave', () => {
                     uploadArea.style.borderColor = 'var(--text-light)';
                     uploadArea.style.backgroundColor = 'var(--bg)';
                 });
-                
+
                 uploadArea.addEventListener('drop', (e) => {
                     e.preventDefault();
                     uploadArea.style.borderColor = 'var(--text-light)';
                     uploadArea.style.backgroundColor = 'var(--bg)';
-                    
+
                     if (e.dataTransfer.files.length) {
                         fileInput.files = e.dataTransfer.files;
                         handleFileSelect({ target: fileInput });
@@ -630,7 +641,7 @@
                 localStorage.setItem('theme', newTheme);
                 updateThemeIcon(newTheme);
             }
-            
+
             function updateThemeIcon(theme) {
                 const icon = themeToggle.querySelector('i');
                 icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
@@ -640,16 +651,16 @@
             async function handleFileSelect(event) {
                 const files = event.target.files;
                 if (!files || files.length === 0) return;
-                
+
                 // Only process the first file for this tool
                 const file = files[0];
-                
+
                 // Verify it's a PDF
                 if (!(file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
                     alert('Please select a valid PDF file.');
                     return;
                 }
-                
+
                 // Show loading
                 uploadArea.innerHTML = `
                     <div class="spinner-border text-primary mb-3" role="status">
@@ -657,7 +668,7 @@
                     </div>
                     <p>Processing your PDF...</p>
                 `;
-                
+
                 try {
                     // Store file data
                     pdfFile = {
@@ -665,7 +676,7 @@
                         size: file.size,
                         arrayBuffer: await readFileAsArrayBuffer(file)
                     };
-                    
+
                     // Verify it's a valid PDF
                     try {
                         const { PDFDocument } = PDFLib;
@@ -676,12 +687,12 @@
                         reset();
                         return;
                     }
-                    
+
                     // Update UI
                     fileInfo.textContent = `Converting ${pdfFile.name} to Excel`;
                     uploadArea.style.display = 'none';
                     optionsContainer.style.display = 'block';
-                    
+
                     // Show convert button
                     const convertBtn = document.createElement('button');
                     convertBtn.className = 'btn btn-primary w-100';
@@ -689,7 +700,7 @@
                     convertBtn.innerHTML = '<i class="fas fa-file-export me-2"></i>Convert to Excel';
                     convertBtn.addEventListener('click', convertToExcel);
                     optionsContainer.appendChild(convertBtn);
-                    
+
                 } catch (error) {
                     console.error('Error loading PDF:', error);
                     alert('Error loading PDF. Please try again.');
@@ -713,23 +724,23 @@
                     alert('Please select a PDF file first.');
                     return;
                 }
-                
+
                 try {
                     // Show progress
                     document.getElementById('convertBtn').disabled = true;
                     progressContainer.style.display = 'block';
                     updateProgress(10, 'Analyzing PDF structure...');
-                    
+
                     // Simulate processing (in a real app, you would use a PDF parsing library)
                     // This is a simplified simulation - actual PDF table extraction would require more complex logic
                     const autoDetect = document.getElementById('autoDetectTables').checked;
                     const outputFormat = document.querySelector('input[name="outputFormat"]:checked').value;
-                    
+
                     // Simulate table detection
                     if (autoDetect) {
                         updateProgress(30, 'Detecting tables...');
                         await delay(1000);
-                        
+
                         // Random number of tables for simulation (3-7)
                         detectedTables = Math.floor(Math.random() * 5) + 3;
                         tablesCount.textContent = `${detectedTables} tables`;
@@ -737,15 +748,15 @@
                     } else {
                         detectedTables = 1;
                     }
-                    
+
                     // Simulate data extraction
                     updateProgress(60, 'Extracting table data...');
                     await delay(1500);
-                    
+
                     // Create sample Excel data
                     updateProgress(80, 'Formatting Excel file...');
                     await delay(1000);
-                    
+
                     // Create a simple worksheet
                     const wsData = [
                         ["Name", "Email", "Phone"],
@@ -753,29 +764,29 @@
                         ["Jane Smith", "jane@example.com", "555-5678"],
                         ["Bob Johnson", "bob@example.com", "555-9012"]
                     ];
-                    
+
                     const ws = XLSX.utils.aoa_to_sheet(wsData);
-                    
+
                     // Create workbook
                     const wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-                    
+
                     // Store the Excel data
                     if (outputFormat === 'xlsx') {
                         excelData = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
                     } else {
                         excelData = XLSX.write(wb, { bookType: 'csv', type: 'string' });
                     }
-                    
+
                     // Show results
                     updateProgress(100, 'Completed!');
                     await delay(500);
-                    
+
                     conversionResult.textContent = '1 file created';
                     resultContainer.style.display = 'block';
                     optionsContainer.style.display = 'none';
                     progressContainer.style.display = 'none';
-                    
+
                 } catch (error) {
                     console.error('Error converting PDF:', error);
                     alert('Error converting PDF to Excel. Please try again.');
@@ -787,11 +798,11 @@
             // Download Excel file
             function downloadExcelFile() {
                 if (!excelData) return;
-                
+
                 try {
                     const outputFormat = document.querySelector('input[name="outputFormat"]:checked').value;
                     const fileName = pdfFile.name.replace('.pdf', '') + (outputFormat === 'xlsx' ? '.xlsx' : '.csv');
-                    
+
                     if (outputFormat === 'xlsx') {
                         const blob = new Blob([excelData], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
                         saveAs(blob, fileName);
@@ -812,7 +823,7 @@
                 pdfFile = null;
                 excelData = null;
                 detectedTables = 0;
-                
+
                 // Reset UI
                 uploadArea.style.display = 'block';
                 uploadArea.innerHTML = `
@@ -825,16 +836,16 @@
                         <i class="fas fa-folder-open me-2"></i>Select File
                     </button>
                 `;
-                
+
                 optionsContainer.style.display = 'none';
                 resultContainer.style.display = 'none';
                 progressContainer.style.display = 'none';
                 tablesInfo.style.display = 'none';
-                
+
                 // Remove convert button if it exists
                 const convertBtn = document.getElementById('convertBtn');
                 if (convertBtn) convertBtn.remove();
-                
+
                 // Re-init browse button
                 document.getElementById('browseBtn').addEventListener('click', () => fileInput.click());
             }
@@ -845,15 +856,19 @@
                 progressPercent.textContent = `${Math.round(percent)}%`;
                 progressText.textContent = text;
             }
-            
+
             // Helper function for delays
             function delay(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
-            
+
             // Start the app
             init();
         });
+        function openPage(page) {
+            window.location.href = page; // This redirects to the specified HTML page
+        }
     </script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,23 +16,23 @@
             --light: #ffffff;
             --success: #2dce89;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #f8f9fe;
             color: #4a5568;
         }
-        
+
         .navbar {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        
+
         .navbar-brand {
             font-weight: 700;
             color: var(--primary) !important;
             letter-spacing: -0.5px;
         }
-        
+
         .tool-card {
             background: var(--light);
             border-radius: 12px;
@@ -39,13 +40,13 @@
             border: none;
             overflow: hidden;
         }
-        
+
         .tool-header {
             background: var(--primary);
             color: white;
             padding: 1.5rem;
         }
-        
+
         .upload-zone {
             border: 2px dashed #cbd5e0;
             border-radius: 8px;
@@ -55,36 +56,36 @@
             transition: all 0.2s ease;
             background: var(--secondary);
         }
-        
+
         .upload-zone:hover {
             border-color: var(--primary);
             background: rgba(94, 114, 228, 0.03);
         }
-        
+
         .upload-icon {
             font-size: 3.5rem;
             color: var(--primary);
             margin-bottom: 1rem;
         }
-        
+
         .btn-primary {
             background-color: var(--primary);
             border-color: var(--primary);
             font-weight: 500;
             padding: 0.5rem 1.5rem;
         }
-        
+
         .btn-outline-primary {
             color: var(--primary);
             border-color: var(--primary);
         }
-        
+
         .options-panel {
             background: var(--secondary);
             border-radius: 8px;
             padding: 1.5rem;
         }
-        
+
         .file-item {
             background: var(--secondary);
             border-radius: 8px;
@@ -93,31 +94,31 @@
             border: 1px solid #e2e8f0;
             transition: all 0.2s ease;
         }
-        
+
         .file-item:hover {
             border-color: var(--primary);
         }
-        
+
         .file-item-handle {
             cursor: move;
             color: var(--primary);
         }
-        
+
         .file-item-remove {
             cursor: pointer;
             color: var(--accent);
         }
-        
+
         .result-card {
             background: var(--secondary);
             border-radius: 8px;
             border-left: 4px solid var(--success);
         }
-        
+
         .badge-success {
             background-color: var(--success);
         }
-        
+
         .ad-card {
             background: var(--secondary);
             border-radius: 8px;
@@ -125,21 +126,21 @@
             text-align: center;
             border: 1px dashed #e2e8f0;
         }
-        
+
         .feature-card {
             transition: all 0.2s ease;
             border: 1px solid #e2e8f0;
         }
-        
+
         .feature-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
-        
+
         .progress-thin {
             height: 6px;
         }
-        
+
         .tool-icon {
             width: 48px;
             height: 48px;
@@ -152,24 +153,25 @@
             font-size: 1.5rem;
             margin-bottom: 1rem;
         }
-        
+
         /* Drag and drop styling */
         .sortable-ghost {
             opacity: 0.5;
             background: rgba(94, 114, 228, 0.1);
         }
-        
+
         .sortable-drag {
             opacity: 0;
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-file-pdf me-2"></i>PDF Toolkit
+                <i class="fas fa-file-pdf me-2"></i>PDF-MAFIA
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -177,17 +179,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-2">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="index.html">Home</a>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="nav-link active" href="#">Tools</a>
+                        <a class="nav-link active" href="index.html">Tools</a>
                     </li>
+                    <!--
                     <li class="nav-item mx-2">
                         <a class="nav-link" href="#">Pricing</a>
                     </li>
                     <li class="nav-item mx-2">
                         <a class="nav-link" href="#">Support</a>
                     </li>
+                    -->
                 </ul>
             </div>
         </div>
@@ -216,16 +220,16 @@
                             </button>
                             <input type="file" id="fileInput" accept=".pdf" multiple style="display: none;">
                         </div>
-                        
+
                         <!-- Files List -->
                         <div id="filesListContainer" class="mb-4" style="display: none;">
                             <h5 class="mb-3"><i class="fas fa-list me-2"></i>Files to Merge</h5>
                             <p class="text-muted small mb-3">Drag and drop to reorder files</p>
-                            
+
                             <div id="filesList" class="sortable-list">
                                 <!-- Files will be added here dynamically -->
                             </div>
-                            
+
                             <div class="d-flex justify-content-between mt-3">
                                 <button class="btn btn-outline-primary" id="addMoreBtn">
                                     <i class="fas fa-plus me-2"></i>Add More Files
@@ -235,7 +239,7 @@
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Progress Container -->
                         <div id="progressContainer" class="mt-3" style="display: none;">
                             <div class="d-flex justify-content-between mb-1">
@@ -243,21 +247,22 @@
                                 <small id="progressPercent">0%</small>
                             </div>
                             <div class="progress progress-thin">
-                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
-                                     role="progressbar" style="width: 0%"></div>
+                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated"
+                                    role="progressbar" style="width: 0%"></div>
                             </div>
                         </div>
-                        
+
                         <!-- Result Container -->
                         <div id="resultContainer" class="result-card p-4" style="display: none;">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
-                                    <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>Merge Successful!</h5>
+                                    <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>Merge
+                                        Successful!</h5>
                                     <p class="text-muted mb-0" id="fileCount">3 files merged</p>
                                 </div>
                                 <span class="badge bg-success" id="mergeResult">1 file created</span>
                             </div>
-                            
+
                             <div class="d-flex flex-column flex-md-row gap-2 justify-content-end mt-3">
                                 <button id="downloadBtn" class="btn btn-primary">
                                     <i class="fas fa-file-pdf me-2"></i>Download Merged PDF
@@ -269,7 +274,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Features Section -->
                 <div class="row g-4 mb-4">
                     <div class="col-md-4">
@@ -278,7 +283,8 @@
                                 <i class="fas fa-shield-alt"></i>
                             </div>
                             <h6 class="text-center">Secure Processing</h6>
-                            <p class="text-muted small text-center">Files are processed in your browser and never uploaded to our servers.</p>
+                            <p class="text-muted small text-center">Files are processed in your browser and never
+                                uploaded to our servers.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -287,7 +293,8 @@
                                 <i class="fas fa-rocket"></i>
                             </div>
                             <h6 class="text-center">Fast Merging</h6>
-                            <p class="text-muted small text-center">Quickly combine large PDFs with our optimized engine.</p>
+                            <p class="text-muted small text-center">Quickly combine large PDFs with our optimized
+                                engine.</p>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -296,12 +303,13 @@
                                 <i class="fas fa-sort"></i>
                             </div>
                             <h6 class="text-center">Flexible Ordering</h6>
-                            <p class="text-muted small text-center">Drag and drop to arrange files exactly how you want them.</p>
+                            <p class="text-muted small text-center">Drag and drop to arrange files exactly how you want
+                                them.</p>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Sidebar Column -->
             <div class="col-lg-4">
                 <!-- Ad Space -->
@@ -313,13 +321,13 @@
                         <button class="btn btn-sm btn-primary">Learn More</button>
                     </div>
                 </div>
-                
+
                 <!-- Other Tools -->
                 <div class="tool-card p-4 mb-4">
                     <h5 class="mb-3"><i class="fas fa-tools me-2"></i>Other Tools</h5>
                     <div class="list-group list-group-flush">
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center" onclick="openPage('pdfsplitter.html')">
                                 <div class="me-3 text-primary">
                                     <i class="fas fa-cut"></i>
                                 </div>
@@ -327,7 +335,7 @@
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center" onclick="openPage('pdfcompress.html')">
                                 <div class="me-3 text-success">
                                     <i class="fas fa-compress-alt"></i>
                                 </div>
@@ -335,24 +343,24 @@
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3 text-warning">
-                                    <i class="fas fa-lock"></i>
+                            <div class="d-flex align-items-center" onclick="openPage('sharepdf.html')">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-share-alt"></i> <!-- Share icon -->
                                 </div>
-                                <div>Protect PDF</div>
+                                <div>Share PDF</div>
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3 text-danger">
-                                    <i class="fas fa-edit"></i>
+                            <div class="d-flex align-items-center" onclick="openPage('numberingpdf.html')">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-list-ol"></i>
                                 </div>
-                                <div>Edit PDF</div>
+                                <div>Numbering of PDF</div>
                             </div>
                         </a>
                     </div>
                 </div>
-                
+
                 <!-- Ad Space -->
                 <div class="ad-card">
                     <div>
@@ -371,7 +379,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4 mb-4 mb-md-0">
-                    <h5 class="mb-3">PDF Toolkit</h5>
+                    <h5 class="mb-3">PDF-MAFIA</h5>
                     <p class="text-muted small">Your complete PDF solution for all document needs.</p>
                 </div>
                 <div class="col-md-4 mb-4 mb-md-0">
@@ -379,8 +387,10 @@
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#" class="text-white-50">Home</a></li>
                         <li class="mb-2"><a href="#" class="text-white-50">Tools</a></li>
+                        <!--
                         <li class="mb-2"><a href="#" class="text-white-50">Pricing</a></li>
                         <li><a href="#" class="text-white-50">Contact</a></li>
+                        -->
                     </ul>
                 </div>
                 <div class="col-md-4">
@@ -395,7 +405,7 @@
             </div>
             <hr class="my-4 bg-secondary">
             <div class="text-center text-muted small">
-                &copy; 2023 PDF Toolkit. All rights reserved.
+                &copy; 2025 PDF-MAFIA. All rights reserved.
             </div>
         </div>
     </footer>
@@ -405,7 +415,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // DOM Elements
             const uploadArea = document.getElementById('uploadArea');
             const browseBtn = document.getElementById('browseBtn');
@@ -423,7 +433,7 @@
             const mergeResult = document.getElementById('mergeResult');
             const downloadBtn = document.getElementById('downloadBtn');
             const newMergeBtn = document.getElementById('newMergeBtn');
-            
+
             // Variables
             let pdfFiles = [];
             let mergedPdfBytes = null;
@@ -438,30 +448,30 @@
                 mergeBtn.addEventListener('click', mergePDFs);
                 downloadBtn.addEventListener('click', downloadMergedPDF);
                 newMergeBtn.addEventListener('click', reset);
-                
+
                 // Drag and drop for files
                 uploadArea.addEventListener('dragover', (e) => {
                     e.preventDefault();
                     uploadArea.style.borderColor = 'var(--primary)';
                     uploadArea.style.backgroundColor = 'rgba(94, 114, 228, 0.05)';
                 });
-                
+
                 uploadArea.addEventListener('dragleave', () => {
                     uploadArea.style.borderColor = '#cbd5e0';
                     uploadArea.style.backgroundColor = 'var(--secondary)';
                 });
-                
+
                 uploadArea.addEventListener('drop', (e) => {
                     e.preventDefault();
                     uploadArea.style.borderColor = '#cbd5e0';
                     uploadArea.style.backgroundColor = 'var(--secondary)';
-                    
+
                     if (e.dataTransfer.files.length) {
                         fileInput.files = e.dataTransfer.files;
                         handleFileSelect({ target: fileInput });
                     }
                 });
-                
+
                 // Initialize sortable list
                 new Sortable(filesList, {
                     animation: 150,
@@ -476,17 +486,17 @@
             async function handleFileSelect(event) {
                 const files = event.target.files;
                 if (!files || files.length === 0) return;
-                
+
                 // Filter only PDF files
                 const pdfFilesArray = Array.from(files).filter(file => {
                     return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
                 });
-                
+
                 if (pdfFilesArray.length === 0) {
                     alert('Please select valid PDF files.');
                     return;
                 }
-                
+
                 // Show loading if first upload
                 if (pdfFiles.length === 0) {
                     uploadArea.innerHTML = `
@@ -496,12 +506,12 @@
                         <p>Processing your PDFs...</p>
                     `;
                 }
-                
+
                 try {
                     // Process each file
                     for (const file of pdfFilesArray) {
                         const arrayBuffer = await readFileAsArrayBuffer(file);
-                        
+
                         // Verify it's a valid PDF
                         try {
                             const { PDFDocument } = PDFLib;
@@ -510,25 +520,25 @@
                             console.error(`File ${file.name} is not a valid PDF`);
                             continue; // Skip invalid files
                         }
-                        
+
                         // Store file data
                         pdfFiles.push({
                             name: file.name,
                             size: file.size,
                             arrayBuffer: arrayBuffer
                         });
-                        
+
                         originalFileNames.push(file.name.replace('.pdf', ''));
                     }
-                    
+
                     // Update UI
                     updateFilesList();
                     filesListContainer.style.display = 'block';
-                    
+
                     if (pdfFiles.length > 0) {
                         uploadArea.style.display = 'none';
                     }
-                    
+
                 } catch (error) {
                     console.error('Error loading PDFs:', error);
                     alert('Error loading PDFs. Please try again.');
@@ -549,7 +559,7 @@
             // Update files list display
             function updateFilesList() {
                 filesList.innerHTML = '';
-                
+
                 pdfFiles.forEach((file, index) => {
                     const fileItem = document.createElement('div');
                     fileItem.className = 'file-item d-flex justify-content-between align-items-center';
@@ -568,14 +578,14 @@
                             <i class="fas fa-times"></i>
                         </div>
                     `;
-                    
+
                     // Add remove event
                     const removeBtn = fileItem.querySelector('.file-item-remove');
                     removeBtn.addEventListener('click', () => removeFile(index));
-                    
+
                     filesList.appendChild(fileItem);
                 });
-                
+
                 fileCount.textContent = `${pdfFiles.length} ${pdfFiles.length === 1 ? 'file' : 'files'} selected`;
             }
 
@@ -583,12 +593,12 @@
             function updateFileOrder() {
                 const newOrder = [];
                 const items = filesList.querySelectorAll('.file-item');
-                
+
                 items.forEach(item => {
                     const index = parseInt(item.dataset.index);
                     newOrder.push(pdfFiles[index]);
                 });
-                
+
                 pdfFiles = newOrder;
             }
 
@@ -596,7 +606,7 @@
             function removeFile(index) {
                 pdfFiles.splice(index, 1);
                 originalFileNames.splice(index, 1);
-                
+
                 if (pdfFiles.length === 0) {
                     reset();
                 } else {
@@ -610,26 +620,26 @@
                     alert('Please add at least one PDF file to merge.');
                     return;
                 }
-                
+
                 try {
                     // Show progress
                     mergeBtn.disabled = true;
                     progressContainer.style.display = 'block';
                     updateProgress(10, 'Initializing merge...');
-                    
+
                     const { PDFDocument } = PDFLib;
                     const mergedPdf = await PDFDocument.create();
-                    
+
                     // Process each PDF
                     for (let i = 0; i < pdfFiles.length; i++) {
                         const file = pdfFiles[i];
                         const progress = 10 + (i / pdfFiles.length * 80);
                         updateProgress(progress, `Processing ${file.name}...`);
-                        
+
                         try {
                             // Load the PDF
                             const pdfDoc = await PDFDocument.load(file.arrayBuffer);
-                            
+
                             // Copy all pages
                             const pageIndices = Array.from({ length: pdfDoc.getPageCount() }, (_, i) => i);
                             const pages = await mergedPdf.copyPages(pdfDoc, pageIndices);
@@ -639,20 +649,20 @@
                             continue; // Skip problematic files
                         }
                     }
-                    
+
                     // Save the merged PDF
                     updateProgress(95, 'Finalizing merged document...');
                     mergedPdfBytes = await mergedPdf.save();
-                    
+
                     // Show results
                     updateProgress(100, 'Completed!');
                     await delay(500);
-                    
+
                     mergeResult.textContent = '1 file created';
                     resultContainer.style.display = 'block';
                     filesListContainer.style.display = 'none';
                     progressContainer.style.display = 'none';
-                    
+
                 } catch (error) {
                     console.error('Error merging PDFs:', error);
                     alert('Error merging PDFs. Please try again.');
@@ -664,7 +674,7 @@
             // Download merged PDF
             function downloadMergedPDF() {
                 if (!mergedPdfBytes) return;
-                
+
                 try {
                     // Create a meaningful filename
                     let fileName = 'merged.pdf';
@@ -674,11 +684,11 @@
                         const commonPrefix = findCommonPrefix(originalFileNames);
                         fileName = commonPrefix ? `${commonPrefix}_merged.pdf` : 'merged.pdf';
                     }
-                    
+
                     // Create blob and download
                     const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
                     saveAs(blob, fileName);
-                    
+
                 } catch (error) {
                     console.error('Error downloading merged PDF:', error);
                     alert('Error downloading merged PDF.');
@@ -692,7 +702,7 @@
                 pdfFiles = [];
                 mergedPdfBytes = null;
                 originalFileNames = [];
-                
+
                 // Reset UI
                 uploadArea.style.display = 'block';
                 uploadArea.innerHTML = `
@@ -705,12 +715,12 @@
                         <i class="fas fa-folder-open me-2"></i>Select Files
                     </button>
                 `;
-                
+
                 filesListContainer.style.display = 'none';
                 resultContainer.style.display = 'none';
                 progressContainer.style.display = 'none';
                 mergeBtn.disabled = false;
-                
+
                 // Re-init browse button
                 document.getElementById('browseBtn').addEventListener('click', () => fileInput.click());
             }
@@ -721,12 +731,12 @@
                 progressPercent.textContent = `${Math.round(percent)}%`;
                 progressText.textContent = text;
             }
-            
+
             // Helper function for delays
             function delay(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
-            
+
             // Format file size
             function formatFileSize(bytes) {
                 if (bytes === 0) return '0 Bytes';
@@ -735,11 +745,11 @@
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
-            
+
             // Find common prefix among filenames
             function findCommonPrefix(names) {
                 if (names.length === 0) return '';
-                
+
                 let prefix = names[0];
                 for (let i = 1; i < names.length; i++) {
                     while (names[i].indexOf(prefix) !== 0) {
@@ -747,13 +757,17 @@
                         if (prefix === '') return '';
                     }
                 }
-                
+
                 return prefix;
             }
 
             // Start the app
             init();
         });
+        function openPage(page) {
+            window.location.href = page; // This redirects to the specified HTML page
+        }
     </script>
 </body>
+
 </html>
