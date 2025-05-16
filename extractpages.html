@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extract PDF Pages | Your PDF Editor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #5e72e4;
+            --secondary: #f7fafc;
+            --accent: #f5365c;
+            --dark: #2d3748;
+            --light: #ffffff;
+            --success: #2dce89;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fe;
+            color: #4a5568;
+        }
+        
+        .navbar {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary) !important;
+            letter-spacing: -0.5px;
+        }
+        
+        .tool-card {
+            background: var(--light);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: none;
+            overflow: hidden;
+        }
+        
+        .tool-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+        }
+        
+        .upload-zone {
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--secondary);
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(94, 114, 228, 0.03);
+        }
+        
+        .upload-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .options-panel {
+            background: var(--secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .result-card {
+            background: var(--secondary);
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .badge-success {
+            background-color: var(--success);
+        }
+        
+        .ad-card {
+            background: var(--secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px dashed #e2e8f0;
+        }
+        
+        .feature-card {
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .progress-thin {
+            height: 6px;
+        }
+        
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(94, 114, 228, 0.1);
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .page-list-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        .page-item {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .page-item:last-child {
+            border-bottom: none;
+        }
+        
+        .page-item-handle {
+            cursor: move;
+            color: var(--primary);
+            margin-right: 1rem;
+        }
+        
+        .page-item-checkbox {
+            margin-right: 1rem;
+        }
+        
+        .page-item-preview {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .page-item-number {
+            font-weight: 600;
+            min-width: 2.5rem;
+            text-align: center;
+        }
+        
+        .page-item-thumbnail {
+            width: 60px;
+            height: 80px;
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        
+        .sortable-ghost {
+            opacity: 0.5;
+            background: rgba(94, 114, 228, 0.1);
+        }
+        
+        .sortable-drag {
+            opacity: 0;
+        }
+        
+        .selection-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .extract-options {
+            margin-top: 1.5rem;
+        }
+        
+        .option-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        @media (max-width: 768px) {
+            .page-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .page-item-preview {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            .selection-actions {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-file-pdf me-2"></i>PDF Toolkit
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link active" href="#">Tools</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Support</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Main Tool Column -->
+            <div class="col-lg-8">
+                <div class="tool-card mb-4">
+                    <div class="tool-header">
+                        <h3 class="mb-0"><i class="fas fa-cut me-2"></i>Extract PDF Pages</h3>
+                        <p class="mb-0 opacity-75">Select and extract specific pages with best quality</p>
+                    </div>
+                    <div class="p-4">
+                        <!-- Upload Area -->
+                        <div id="uploadArea" class="upload-zone mb-4">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h4 class="mb-2">Drop your PDF here</h4>
+                            <p class="text-muted mb-3">or click to browse your files</p>
+                            <button class="btn btn-primary px-4" id="browseBtn">
+                                <i class="fas fa-folder-open me-2"></i>Select PDF
+                            </button>
+                            <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                        </div>
+                        
+                        <!-- Page Selection -->
+                        <div id="selectionContainer" class="mb-4" style="display: none;">
+                            <h5 class="mb-3"><i class="fas fa-list-ol me-2"></i>Select Pages to Extract</h5>
+                            
+                            <div class="selection-actions">
+                                <button class="btn btn-sm btn-outline-primary" id="selectAllBtn">
+                                    <i class="fas fa-check-square me-2"></i>Select All
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary" id="deselectAllBtn">
+                                    <i class="fas fa-square me-2"></i>Deselect All
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary" id="invertSelectionBtn">
+                                    <i class="fas fa-exchange-alt me-2"></i>Invert Selection
+                                </button>
+                            </div>
+                            
+                            <div class="page-list-container">
+                                <div id="pageList" class="sortable-list">
+                                    <!-- Pages will be added here dynamically -->
+                                </div>
+                            </div>
+                            
+                            <div class="extract-options">
+                                <div class="option-card">
+                                    <h6 class="mb-3"><i class="fas fa-cog me-2"></i>Extraction Options</h6>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Output Format</label>
+                                            <select class="form-select" id="outputFormat">
+                                                <option value="pdf" selected>PDF Document</option>
+                                                <option value="separate">Separate PDF Files</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Quality Preset</label>
+                                            <select class="form-select" id="qualityPreset">
+                                                <option value="high" selected>High (Best Quality)</option>
+                                                <option value="medium">Medium (Balanced)</option>
+                                                <option value="small">Small (Reduced Size)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-3">
+                                <button class="btn btn-outline-primary" id="changeFileBtn">
+                                    <i class="fas fa-redo me-2"></i>Change File
+                                </button>
+                                <button class="btn btn-primary" id="extractPagesBtn">
+                                    <i class="fas fa-cut me-2"></i>Extract Selected Pages
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Container -->
+                        <div id="progressContainer" class="mt-3" style="display: none;">
+                            <div class="d-flex justify-content-between mb-1">
+                                <small id="progressText">Processing...</small>
+                                <small id="progressPercent">0%</small>
+                            </div>
+                            <div class="progress progress-thin">
+                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Result Container -->
+                        <div id="resultContainer" class="result-card p-4" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>Extraction Successful!</h5>
+                                    <p class="text-muted mb-0" id="pageCount">3 pages extracted</p>
+                                </div>
+                                <span class="badge bg-success" id="resultSummary">New PDF created</span>
+                            </div>
+                            
+                            <div class="d-flex flex-column flex-md-row gap-2 justify-content-end mt-3">
+                                <button id="downloadBtn" class="btn btn-primary">
+                                    <i class="fas fa-file-pdf me-2"></i>Download Extracted Pages
+                                </button>
+                                <button id="newExtractBtn" class="btn btn-outline-primary">
+                                    <i class="fas fa-redo me-2"></i>Start New Extraction
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Features Section -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="feature-card p-4 h-100 rounded">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h6 class="text-center">Secure Processing</h6>
+                            <p class="text-muted small text-center">Files are processed in your browser and never uploaded to our servers.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card p-4 h-100 rounded">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h6 class="text-center">Best Quality</h6>
+                            <p class="text-muted small text-center">Preserve original quality with our high-fidelity extraction.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card p-4 h-100 rounded">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-sliders-h"></i>
+                            </div>
+                            <h6 class="text-center">Flexible Options</h6>
+                            <p class="text-muted small text-center">Choose between single PDF or separate files for each page.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar Column -->
+            <div class="col-lg-4">
+                <!-- Ad Space -->
+                <div class="ad-card mb-4">
+                    <div>
+                        <p class="text-muted small mb-1">ADVERTISEMENT</p>
+                        <h6 class="mb-2">Upgrade to Pro</h6>
+                        <p class="small mb-3">Get unlimited access to all premium features</p>
+                        <button class="btn btn-sm btn-primary">Learn More</button>
+                    </div>
+                </div>
+                
+                <!-- Other Tools -->
+                <div class="tool-card p-4 mb-4">
+                    <h5 class="mb-3"><i class="fas fa-tools me-2"></i>Other Tools</h5>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-object-group"></i>
+                                </div>
+                                <div>PDF Merger</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3 text-success">
+                                    <i class="fas fa-trash-alt"></i>
+                                </div>
+                                <div>Delete PDF Pages</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3 text-warning">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <div>Protect PDF</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3 text-danger">
+                                    <i class="fas fa-edit"></i>
+                                </div>
+                                <div>Edit PDF</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Ad Space -->
+                <div class="ad-card">
+                    <div>
+                        <p class="text-muted small mb-1">SPONSORED</p>
+                        <h6 class="mb-2">Need More Power?</h6>
+                        <p class="small mb-3">Try our desktop application for advanced features</p>
+                        <button class="btn btn-sm btn-outline-primary">Download Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="mb-3">PDF Toolkit</h5>
+                    <p class="text-muted small">Your complete PDF solution for all document needs.</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h6 class="mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-white-50">Home</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50">Tools</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50">Pricing</a></li>
+                        <li><a href="#" class="text-white-50">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="mb-3">Connect</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white-50"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white-50"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white-50"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white-50"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-secondary">
+            <div class="text-center text-muted small">
+                &copy; 2023 PDF Toolkit. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+    <script>
+        // Set worker path for pdf.js
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const browseBtn = document.getElementById('browseBtn');
+            const fileInput = document.getElementById('fileInput');
+            const selectionContainer = document.getElementById('selectionContainer');
+            const pageList = document.getElementById('pageList');
+            const selectAllBtn = document.getElementById('selectAllBtn');
+            const deselectAllBtn = document.getElementById('deselectAllBtn');
+            const invertSelectionBtn = document.getElementById('invertSelectionBtn');
+            const changeFileBtn = document.getElementById('changeFileBtn');
+            const extractPagesBtn = document.getElementById('extractPagesBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressPercent = document.getElementById('progressPercent');
+            const resultContainer = document.getElementById('resultContainer');
+            const pageCount = document.getElementById('pageCount');
+            const resultSummary = document.getElementById('resultSummary');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const newExtractBtn = document.getElementById('newExtractBtn');
+            const outputFormat = document.getElementById('outputFormat');
+            const qualityPreset = document.getElementById('qualityPreset');
+            
+            // Variables
+            let pdfFile = null;
+            let pdfDoc = null;
+            let extractedPdfBytes = null;
+            let extractedPagesZip = null;
+            let totalPages = 0;
+            let pdfName = '';
+            
+            // Initialize
+            function init() {
+                // Event listeners
+                browseBtn.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', handleFileSelect);
+                selectAllBtn.addEventListener('click', selectAllPages);
+                deselectAllBtn.addEventListener('click', deselectAllPages);
+                invertSelectionBtn.addEventListener('click', invertSelection);
+                changeFileBtn.addEventListener('click', reset);
+                extractPagesBtn.addEventListener('click', extractSelectedPages);
+                downloadBtn.addEventListener('click', downloadExtractedPages);
+                newExtractBtn.addEventListener('click', reset);
+                
+                // Drag and drop for files
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = 'var(--primary)';
+                    uploadArea.style.backgroundColor = 'rgba(94, 114, 228, 0.05)';
+                });
+                
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.style.borderColor = '#cbd5e0';
+                    uploadArea.style.backgroundColor = 'var(--secondary)';
+                });
+                
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = '#cbd5e0';
+                    uploadArea.style.backgroundColor = 'var(--secondary)';
+                    
+                    if (e.dataTransfer.files.length) {
+                        fileInput.files = e.dataTransfer.files;
+                        handleFileSelect({ target: fileInput });
+                    }
+                });
+            }
+
+            // File selection handler
+            async function handleFileSelect(event) {
+                const files = event.target.files;
+                if (!files || files.length === 0) return;
+                
+                // Only process the first file (single PDF)
+                const file = files[0];
+                
+                if (!(file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
+                    alert('Please select a valid PDF file.');
+                    return;
+                }
+                
+                // Show loading
+                uploadArea.innerHTML = `
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p>Loading your PDF...</p>
+                `;
+                
+                try {
+                    // Store file data
+                    pdfFile = file;
+                    pdfName = file.name.replace('.pdf', '');
+                    
+                    // Load PDF to get page count
+                    const arrayBuffer = await readFileAsArrayBuffer(file);
+                    const loadingTask = pdfjsLib.getDocument(arrayBuffer);
+                    pdfDoc = await loadingTask.promise;
+                    totalPages = pdfDoc.numPages;
+                    
+                    // Update UI
+                    uploadArea.style.display = 'none';
+                    selectionContainer.style.display = 'block';
+                    
+                    // Create page list
+                    createPageList();
+                    
+                } catch (error) {
+                    console.error('Error loading PDF:', error);
+                    alert('Error loading PDF. Please try again.');
+                    reset();
+                }
+            }
+
+            // Create page list items
+            function createPageList() {
+                pageList.innerHTML = '';
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    const pageItem = document.createElement('div');
+                    pageItem.className = 'page-item';
+                    pageItem.dataset.pageNumber = i;
+                    pageItem.innerHTML = `
+                        <div class="page-item-preview">
+                            <div class="page-item-handle">
+                                <i class="fas fa-bars"></i>
+                            </div>
+                            <div class="page-item-number">${i}</div>
+                            <div class="page-item-thumbnail">Page ${i}</div>
+                        </div>
+                        <div>
+                            <input type="checkbox" class="page-item-checkbox" id="page-${i}" checked>
+                            <label for="page-${i}" class="visually-hidden">Select page ${i}</label>
+                        </div>
+                    `;
+                    pageList.appendChild(pageItem);
+                }
+                
+                // Initialize sortable
+                new Sortable(pageList, {
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    handle: '.page-item-handle'
+                });
+            }
+
+            // Select all pages
+            function selectAllPages() {
+                document.querySelectorAll('.page-item-checkbox').forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+            }
+
+            // Deselect all pages
+            function deselectAllPages() {
+                document.querySelectorAll('.page-item-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            }
+
+            // Invert selection
+            function invertSelection() {
+                document.querySelectorAll('.page-item-checkbox').forEach(checkbox => {
+                    checkbox.checked = !checkbox.checked;
+                });
+            }
+
+            // Helper function to read file as ArrayBuffer
+            function readFileAsArrayBuffer(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+
+            // Extract selected pages
+            async function extractSelectedPages() {
+                // Get selected pages
+                const checkboxes = document.querySelectorAll('.page-item-checkbox:checked');
+                
+                if (checkboxes.length === 0) {
+                    alert('Please select at least one page to extract.');
+                    return;
+                }
+                
+                try {
+                    // Show progress
+                    extractPagesBtn.disabled = true;
+                    selectionContainer.style.display = 'none';
+                    progressContainer.style.display = 'block';
+                    updateProgress(10, 'Preparing extraction...');
+                    
+                    // Get the order of pages from the current DOM (after drag and drop)
+                    const pageOrder = [];
+                    const pageItems = document.querySelectorAll('.page-item');
+                    pageItems.forEach(item => {
+                        pageOrder.push(parseInt(item.dataset.pageNumber));
+                    });
+                    
+                    // Get selected pages (checked checkboxes)
+                    const selectedPages = [];
+                    checkboxes.forEach(checkbox => {
+                        const pageNumber = parseInt(checkbox.id.split('-')[1]);
+                        selectedPages.push(pageNumber);
+                    });
+                    
+                    // Load the original PDF
+                    const arrayBuffer = await readFileAsArrayBuffer(pdfFile);
+                    const { PDFDocument } = PDFLib;
+                    const originalPdf = await PDFDocument.load(arrayBuffer);
+                    
+                    // Get quality settings
+                    const quality = qualityPreset.value;
+                    const format = outputFormat.value;
+                    
+                    if (format === 'pdf') {
+                        // Create a single PDF with selected pages
+                        const newPdf = await PDFDocument.create();
+                        
+                        // Copy pages in order, only selected ones
+                        let pagesCopied = 0;
+                        const totalToCopy = selectedPages.length;
+                        
+                        for (const pageNumber of pageOrder) {
+                            if (selectedPages.includes(pageNumber)) {
+                                updateProgress(10 + (pagesCopied / totalToCopy * 80), 
+                                             `Extracting page ${pageNumber}...`);
+                                
+                                try {
+                                    const [page] = await newPdf.copyPages(originalPdf, [pageNumber - 1]);
+                                    newPdf.addPage(page);
+                                    pagesCopied++;
+                                } catch (e) {
+                                    console.error(`Error copying page ${pageNumber}:`, e);
+                                    continue;
+                                }
+                            }
+                        }
+                        
+                        // Save the new PDF
+                        updateProgress(95, 'Finalizing document...');
+                        extractedPdfBytes = await newPdf.save({
+                            useObjectStreams: quality !== 'high',
+                            // Higher quality settings
+                            ...(quality === 'high' ? {
+                                useCompression: false,
+                                // Other high quality options
+                            } : {}),
+                            ...(quality === 'small' ? {
+                                useCompression: true,
+                                // Other size reduction options
+                            } : {})
+                        });
+                        
+                        // Show results
+                        updateProgress(100, 'Completed!');
+                        await delay(500);
+                        
+                        pageCount.textContent = `${selectedPages.length} ${selectedPages.length === 1 ? 'page' : 'pages'} extracted`;
+                        resultSummary.textContent = '1 PDF created';
+                        resultContainer.style.display = 'block';
+                        progressContainer.style.display = 'none';
+                        
+                    } else if (format === 'separate') {
+                        // Create separate PDFs for each selected page
+                        updateProgress(20, 'Preparing multiple files...');
+                        
+                        const zip = new JSZip();
+                        let filesProcessed = 0;
+                        const totalToProcess = selectedPages.length;
+                        
+                        for (const pageNumber of pageOrder) {
+                            if (selectedPages.includes(pageNumber)) {
+                                updateProgress(20 + (filesProcessed / totalToProcess * 70), 
+                                             `Processing page ${pageNumber}...`);
+                                
+                                try {
+                                    const singlePagePdf = await PDFDocument.create();
+                                    const [page] = await singlePagePdf.copyPages(originalPdf, [pageNumber - 1]);
+                                    singlePagePdf.addPage(page);
+                                    
+                                    const bytes = await singlePagePdf.save({
+                                        useObjectStreams: quality !== 'high',
+                                        ...(quality === 'high' ? {
+                                            useCompression: false,
+                                        } : {}),
+                                        ...(quality === 'small' ? {
+                                            useCompression: true,
+                                        } : {})
+                                    });
+                                    
+                                    zip.file(`${pdfName}_page_${pageNumber}.pdf`, bytes);
+                                    filesProcessed++;
+                                } catch (e) {
+                                    console.error(`Error processing page ${pageNumber}:`, e);
+                                    continue;
+                                }
+                            }
+                        }
+                        
+                        // Generate ZIP file
+                        updateProgress(95, 'Creating ZIP archive...');
+                        extractedPagesZip = await zip.generateAsync({ type: 'blob' });
+                        
+                        // Show results
+                        updateProgress(100, 'Completed!');
+                        await delay(500);
+                        
+                        pageCount.textContent = `${selectedPages.length} ${selectedPages.length === 1 ? 'page' : 'pages'} extracted`;
+                        resultSummary.textContent = `${selectedPages.length} PDFs created`;
+                        resultContainer.style.display = 'block';
+                        progressContainer.style.display = 'none';
+                    }
+                    
+                } catch (error) {
+                    console.error('Error extracting pages:', error);
+                    alert('Error extracting pages. Please try again.');
+                    extractPagesBtn.disabled = false;
+                    progressContainer.style.display = 'none';
+                    selectionContainer.style.display = 'block';
+                }
+            }
+
+            // Download extracted pages
+            function downloadExtractedPages() {
+                try {
+                    const format = outputFormat.value;
+                    
+                    if (format === 'pdf' && extractedPdfBytes) {
+                        const blob = new Blob([extractedPdfBytes], { type: 'application/pdf' });
+                        saveAs(blob, `${pdfName}_extracted.pdf`);
+                    } 
+                    else if (format === 'separate' && extractedPagesZip) {
+                        saveAs(extractedPagesZip, `${pdfName}_extracted_pages.zip`);
+                    }
+                } catch (error) {
+                    console.error('Error downloading extracted pages:', error);
+                    alert('Error downloading extracted pages.');
+                }
+            }
+
+            // Reset tool
+            function reset() {
+                // Reset file input
+                fileInput.value = '';
+                pdfFile = null;
+                pdfDoc = null;
+                extractedPdfBytes = null;
+                extractedPagesZip = null;
+                totalPages = 0;
+                pdfName = '';
+                
+                // Reset UI
+                uploadArea.style.display = 'block';
+                uploadArea.innerHTML = `
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h4 class="mb-2">Drop your PDF here</h4>
+                    <p class="text-muted mb-3">or click to browse your files</p>
+                    <button class="btn btn-primary px-4" id="browseBtn">
+                        <i class="fas fa-folder-open me-2"></i>Select PDF
+                    </button>
+                `;
+                
+                selectionContainer.style.display = 'none';
+                resultContainer.style.display = 'none';
+                progressContainer.style.display = 'none';
+                extractPagesBtn.disabled = false;
+                outputFormat.value = 'pdf';
+                qualityPreset.value = 'high';
+                
+                // Re-init browse button
+                document.getElementById('browseBtn').addEventListener('click', () => fileInput.click());
+            }
+
+            // Update progress display
+            function updateProgress(percent, text) {
+                progressBar.style.width = `${percent}%`;
+                progressPercent.textContent = `${Math.round(percent)}%`;
+                progressText.textContent = text;
+            }
+            
+            // Helper function for delays
+            function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            // Start the app
+            init();
+        });
+    </script>
+</body>
+</html>
