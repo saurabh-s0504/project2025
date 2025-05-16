@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Organizer | Your PDF Editor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --secondary: #1a1a2e;
+            --accent: #ff2e63;
+            --dark: #16213e;
+            --light: #e94560;
+            --success: #06d6a0;
+            --text-light: #f8f9fa;
+            --text-muted: #adb5bd;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #0f0f1a;
+            color: var(--text-light);
+        }
+        
+        .navbar {
+            background-color: var(--dark) !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary) !important;
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-link {
+            color: var(--text-light) !important;
+            opacity: 0.8;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            opacity: 1;
+            color: var(--primary) !important;
+        }
+        
+        .tool-card {
+            background: var(--dark);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255,255,255,0.05);
+            overflow: hidden;
+        }
+        
+        .tool-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+        }
+        
+        .upload-zone {
+            border: 2px dashed rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: rgba(255,255,255,0.03);
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(58, 134, 255, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            font-weight: 500;
+            padding: 0.5rem 1.5rem;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2a75e6;
+            border-color: #2a75e6;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: rgba(58, 134, 255, 0.1);
+            color: var(--primary);
+        }
+        
+        .page-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.2s ease;
+            cursor: move;
+        }
+        
+        .page-item:hover {
+            border-color: var(--primary);
+            background: rgba(58, 134, 255, 0.1);
+        }
+        
+        .page-item-actions {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .page-item:hover .page-item-actions {
+            opacity: 1;
+        }
+        
+        .page-thumbnail {
+            width: 60px;
+            height: 80px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            overflow: hidden;
+        }
+        
+        .page-thumbnail img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .result-card {
+            background: rgba(6, 214, 160, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .badge-success {
+            background-color: var(--success);
+        }
+        
+        .progress-thin {
+            height: 6px;
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .progress-bar {
+            background-color: var(--primary);
+        }
+        
+        .tool-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(58, 134, 255, 0.2);
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Drag and drop styling */
+        .sortable-ghost {
+            opacity: 0.5;
+            background: rgba(58, 134, 255, 0.2);
+        }
+        
+        .sortable-drag {
+            opacity: 0;
+        }
+        
+        /* Text colors */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-light);
+        }
+        
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--secondary) !important;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Custom controls */
+        .form-control, .form-select {
+            background-color: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+            color: var(--text-light);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background-color: rgba(255,255,255,0.1);
+            border-color: var(--primary);
+            color: var(--text-light);
+            box-shadow: 0 0 0 0.25rem rgba(58, 134, 255, 0.25);
+        }
+        
+        /* Action buttons */
+        .btn-action {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+        
+        /* Page controls */
+        .page-controls {
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-file-pdf me-2"></i>PDF Toolkit
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link active" href="#">Tools</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Support</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Main Tool Column -->
+            <div class="col-lg-8">
+                <div class="tool-card mb-4">
+                    <div class="tool-header">
+                        <h3 class="mb-0"><i class="fas fa-layer-group me-2"></i>PDF Organizer</h3>
+                        <p class="mb-0 opacity-75">Rearrange, duplicate, or add pages to your PDF</p>
+                    </div>
+                    <div class="p-4">
+                        <!-- Upload Area -->
+                        <div id="uploadArea" class="upload-zone mb-4">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h4 class="mb-2">Drop your PDF here</h4>
+                            <p class="text-muted mb-3">or click to browse your files</p>
+                            <button class="btn btn-primary px-4" id="browseBtn">
+                                <i class="fas fa-folder-open me-2"></i>Select PDF
+                            </button>
+                            <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                        </div>
+                        
+                        <!-- Editor Container -->
+                        <div id="editorContainer" style="display: none;">
+                            <!-- Page Controls -->
+                            <div class="page-controls mb-3">
+                                <div class="d-flex flex-wrap gap-2">
+                                    <button class="btn btn-outline-primary btn-sm" id="addBlankPageBtn">
+                                        <i class="fas fa-plus me-1"></i>Add Blank Page
+                                    </button>
+                                    <button class="btn btn-outline-primary btn-sm" id="addFromPdfBtn">
+                                        <i class="fas fa-file-import me-1"></i>Add From PDF
+                                    </button>
+                                    <input type="file" id="addPdfInput" accept=".pdf" style="display: none;">
+                                    <div class="ms-auto d-flex gap-2">
+                                        <button class="btn btn-primary btn-sm" id="savePdfBtn">
+                                            <i class="fas fa-save me-1"></i>Save PDF
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm" id="resetBtn">
+                                            <i class="fas fa-redo me-1"></i>Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Pages List -->
+                            <h5 class="mb-3"><i class="fas fa-file-alt me-2"></i>Pages</h5>
+                            <p class="text-muted small mb-3">Drag and drop to reorder pages</p>
+                            
+                            <div id="pagesList" class="sortable-list mb-4">
+                                <!-- Pages will be added here dynamically -->
+                            </div>
+                            
+                            <!-- Progress Container -->
+                            <div id="progressContainer" class="mt-3" style="display: none;">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small id="progressText">Processing...</small>
+                                    <small id="progressPercent">0%</small>
+                                </div>
+                                <div class="progress progress-thin">
+                                    <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                         role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Result Container -->
+                            <div id="resultContainer" class="result-card p-4" style="display: none;">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>PDF Saved!</h5>
+                                        <p class="text-muted mb-0" id="pageCount">5 pages processed</p>
+                                    </div>
+                                    <span class="badge bg-success">Ready</span>
+                                </div>
+                                
+                                <div class="d-flex flex-column flex-md-row gap-2 justify-content-end mt-3">
+                                    <button id="downloadBtn" class="btn btn-primary">
+                                        <i class="fas fa-file-pdf me-2"></i>Download PDF
+                                    </button>
+                                    <button id="newEditBtn" class="btn btn-outline-primary">
+                                        <i class="fas fa-redo me-2"></i>Edit Another
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Features Section -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="feature-card p-4 h-100 rounded">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-random"></i>
+                            </div>
+                            <h6 class="text-center">Rearrange Pages</h6>
+                            <p class="text-muted small text-center">Drag and drop to organize pages in any order you need.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card p-4 h-100 rounded">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-copy"></i>
+                            </div>
+                            <h6 class="text-center">Duplicate Pages</h6>
+                            <p class="text-muted small text-center">Easily create copies of any page in your document.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="feature-card p-4 h-100 rounded">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-plus-circle"></i>
+                            </div>
+                            <h6 class="text-center">Add Pages</h6>
+                            <p class="text-muted small text-center">Insert blank pages or import from other PDF files.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar Column -->
+            <div class="col-lg-4">
+                <!-- Ad Space -->
+                <div class="ad-card mb-4">
+                    <div>
+                        <p class="text-muted small mb-1">ADVERTISEMENT</p>
+                        <h6 class="mb-2">Upgrade to Pro</h6>
+                        <p class="small mb-3">Get unlimited access to all premium features</p>
+                        <button class="btn btn-sm btn-primary">Learn More</button>
+                    </div>
+                </div>
+                
+                <!-- Other Tools -->
+                <div class="tool-card p-4 mb-4">
+                    <h5 class="mb-3"><i class="fas fa-tools me-2"></i>Other Tools</h5>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-object-group"></i>
+                                </div>
+                                <div>PDF Merger</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3 text-success">
+                                    <i class="fas fa-cut"></i>
+                                </div>
+                                <div>PDF Splitter</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3 text-warning">
+                                    <i class="fas fa-compress-alt"></i>
+                                </div>
+                                <div>Compress PDF</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-3 text-danger">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                <div>Protect PDF</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Ad Space -->
+                <div class="ad-card">
+                    <div>
+                        <p class="text-muted small mb-1">SPONSORED</p>
+                        <h6 class="mb-2">Need More Power?</h6>
+                        <p class="small mb-3">Try our desktop application for advanced features</p>
+                        <button class="btn btn-sm btn-outline-primary">Download Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5 class="mb-3">PDF Toolkit</h5>
+                    <p class="text-muted small">Your complete PDF solution for all document needs.</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h6 class="mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted">Home</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted">Tools</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted">Pricing</a></li>
+                        <li><a href="#" class="text-muted">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="mb-3">Connect</h6>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-muted"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-muted"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4 bg-secondary">
+            <div class="text-center text-muted small">
+                &copy; 2023 PDF Toolkit. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const browseBtn = document.getElementById('browseBtn');
+            const fileInput = document.getElementById('fileInput');
+            const editorContainer = document.getElementById('editorContainer');
+            const pagesList = document.getElementById('pagesList');
+            const addBlankPageBtn = document.getElementById('addBlankPageBtn');
+            const addFromPdfBtn = document.getElementById('addFromPdfBtn');
+            const addPdfInput = document.getElementById('addPdfInput');
+            const savePdfBtn = document.getElementById('savePdfBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const progressPercent = document.getElementById('progressPercent');
+            const resultContainer = document.getElementById('resultContainer');
+            const pageCount = document.getElementById('pageCount');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const newEditBtn = document.getElementById('newEditBtn');
+            
+            // Variables
+            let pdfDoc = null;
+            let pdfBytes = null;
+            let fileName = '';
+            let pageImages = [];
+
+            // Initialize
+            function init() {
+                // Event listeners
+                browseBtn.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', handleFileSelect);
+                addBlankPageBtn.addEventListener('click', addBlankPage);
+                addFromPdfBtn.addEventListener('click', () => addPdfInput.click());
+                addPdfInput.addEventListener('change', handleAddPdf);
+                savePdfBtn.addEventListener('click', savePDF);
+                resetBtn.addEventListener('click', reset);
+                downloadBtn.addEventListener('click', downloadPDF);
+                newEditBtn.addEventListener('click', reset);
+                
+                // Drag and drop for files
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = 'var(--primary)';
+                    uploadArea.style.backgroundColor = 'rgba(58, 134, 255, 0.2)';
+                });
+                
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.style.borderColor = 'rgba(255,255,255,0.1)';
+                    uploadArea.style.backgroundColor = 'rgba(255,255,255,0.03)';
+                });
+                
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = 'rgba(255,255,255,0.1)';
+                    uploadArea.style.backgroundColor = 'rgba(255,255,255,0.03)';
+                    
+                    if (e.dataTransfer.files.length) {
+                        fileInput.files = e.dataTransfer.files;
+                        handleFileSelect({ target: fileInput });
+                    }
+                });
+                
+                // Initialize sortable list
+                new Sortable(pagesList, {
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    dragClass: 'sortable-drag',
+                    onEnd: updatePageOrder
+                });
+            }
+
+            // File selection handler
+            async function handleFileSelect(event) {
+                const files = event.target.files;
+                if (!files || files.length === 0) return;
+                
+                const file = files[0];
+                if (!file.type === 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                    alert('Please select a valid PDF file.');
+                    return;
+                }
+                
+                // Show loading
+                uploadArea.innerHTML = `
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p>Processing your PDF...</p>
+                `;
+                
+                try {
+                    const arrayBuffer = await readFileAsArrayBuffer(file);
+                    const { PDFDocument } = PDFLib;
+                    
+                    // Load the PDF
+                    pdfDoc = await PDFDocument.load(arrayBuffer);
+                    pdfBytes = arrayBuffer;
+                    fileName = file.name.replace('.pdf', '');
+                    
+                    // Generate thumbnails and display pages
+                    await displayPages();
+                    
+                    // Update UI
+                    uploadArea.style.display = 'none';
+                    editorContainer.style.display = 'block';
+                    
+                } catch (error) {
+                    console.error('Error loading PDF:', error);
+                    alert('Error loading PDF. Please try again.');
+                    reset();
+                }
+            }
+
+            // Display all pages in the editor
+            async function displayPages() {
+                pagesList.innerHTML = '';
+                pageImages = [];
+                
+                const pageCount = pdfDoc.getPageCount();
+                for (let i = 0; i < pageCount; i++) {
+                    await addPageToDisplay(i);
+                }
+                
+                updatePageNumbers();
+            }
+
+            // Add a page to the display list
+            async function addPageToDisplay(pageIndex) {
+                const pageItem = document.createElement('div');
+                pageItem.className = 'page-item d-flex justify-content-between align-items-center';
+                pageItem.dataset.index = pageIndex;
+                
+                // Create thumbnail (simplified - in a real app you'd render actual thumbnails)
+                const thumbnail = document.createElement('div');
+                thumbnail.className = 'page-thumbnail';
+                thumbnail.innerHTML = `<span>Page ${pageIndex + 1}</span>`;
+                
+                // Page info
+                const pageInfo = document.createElement('div');
+                pageInfo.className = 'flex-grow-1 mx-3';
+                pageInfo.innerHTML = `<small class="text-muted">Page ${pageIndex + 1}</small>`;
+                
+                // Actions
+                const actions = document.createElement('div');
+                actions.className = 'page-item-actions d-flex';
+                actions.innerHTML = `
+                    <button class="btn btn-outline-primary btn-action duplicate-page" title="Duplicate">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-action remove-page" title="Remove">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                
+                // Assemble the item
+                pageItem.appendChild(thumbnail);
+                pageItem.appendChild(pageInfo);
+                pageItem.appendChild(actions);
+                pagesList.appendChild(pageItem);
+                
+                // Add event listeners
+                pageItem.querySelector('.duplicate-page').addEventListener('click', () => duplicatePage(pageIndex));
+                pageItem.querySelector('.remove-page').addEventListener('click', () => removePage(pageIndex));
+                
+                // Store reference to the page image (would be actual thumbnail in real implementation)
+                pageImages.push(null);
+            }
+
+            // Update page order after drag and drop
+            function updatePageOrder() {
+                const newOrder = [];
+                const items = pagesList.querySelectorAll('.page-item');
+                
+                items.forEach(item => {
+                    const index = parseInt(item.dataset.index);
+                    newOrder.push(index);
+                });
+                
+                // Reorder pages in the PDF document
+                const newIndices = Array.from({ length: pdfDoc.getPageCount() }, (_, i) => i);
+                newOrder.forEach((oldIndex, newIndex) => {
+                    newIndices[newIndex] = oldIndex;
+                });
+                
+                // Rebuild the PDF with new page order
+                rebuildPDFWithNewOrder(newIndices);
+            }
+
+            // Rebuild PDF with new page order
+            async function rebuildPDFWithNewOrder(newIndices) {
+                try {
+                    const { PDFDocument } = PDFLib;
+                    const newPdfDoc = await PDFDocument.create();
+                    
+                    // Copy pages in new order
+                    for (const index of newIndices) {
+                        const [page] = await newPdfDoc.copyPages(pdfDoc, [index]);
+                        newPdfDoc.addPage(page);
+                    }
+                    
+                    // Update our references
+                    const newBytes = await newPdfDoc.save();
+                    pdfDoc = await PDFDocument.load(newBytes);
+                    pdfBytes = newBytes;
+                    
+                    // Redisplay pages
+                    await displayPages();
+                    
+                } catch (error) {
+                    console.error('Error reordering pages:', error);
+                    alert('Error reordering pages. Please try again.');
+                }
+            }
+
+            // Add a blank page
+            async function addBlankPage() {
+                try {
+                    const { PDFDocument } = PDFLib;
+                    const workingDoc = await PDFDocument.load(pdfBytes);
+                    
+                    // Add blank page (A4 size)
+                    workingDoc.addPage([595, 842]);
+                    
+                    // Update our references
+                    const newBytes = await workingDoc.save();
+                    pdfDoc = await PDFDocument.load(newBytes);
+                    pdfBytes = newBytes;
+                    
+                    // Add the new page to display
+                    const newPageIndex = pdfDoc.getPageCount() - 1;
+                    await addPageToDisplay(newPageIndex);
+                    updatePageNumbers();
+                    
+                } catch (error) {
+                    console.error('Error adding blank page:', error);
+                    alert('Error adding blank page. Please try again.');
+                }
+            }
+
+            // Handle adding pages from another PDF
+            async function handleAddPdf(event) {
+                const files = event.target.files;
+                if (!files || files.length === 0) return;
+                
+                const file = files[0];
+                if (!file.type === 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                    alert('Please select a valid PDF file.');
+                    return;
+                }
+                
+                try {
+                    const arrayBuffer = await readFileAsArrayBuffer(file);
+                    const { PDFDocument } = PDFLib;
+                    const srcDoc = await PDFDocument.load(arrayBuffer);
+                    
+                    // Merge the pages into our working document
+                    const workingDoc = await PDFDocument.load(pdfBytes);
+                    const pageIndices = Array.from({ length: srcDoc.getPageCount() }, (_, i) => i);
+                    const pages = await workingDoc.copyPages(srcDoc, pageIndices);
+                    pages.forEach(page => workingDoc.addPage(page));
+                    
+                    // Update our references
+                    const newBytes = await workingDoc.save();
+                    pdfDoc = await PDFDocument.load(newBytes);
+                    pdfBytes = newBytes;
+                    
+                    // Add the new pages to display
+                    const startIndex = pdfDoc.getPageCount() - srcDoc.getPageCount();
+                    for (let i = startIndex; i < pdfDoc.getPageCount(); i++) {
+                        await addPageToDisplay(i);
+                    }
+                    updatePageNumbers();
+                    
+                    // Reset file input
+                    addPdfInput.value = '';
+                    
+                } catch (error) {
+                    console.error('Error adding pages from PDF:', error);
+                    alert('Error adding pages from PDF. Please try again.');
+                    addPdfInput.value = '';
+                }
+            }
+
+            // Duplicate a page
+            async function duplicatePage(pageIndex) {
+                try {
+                    const { PDFDocument } = PDFLib;
+                    const workingDoc = await PDFDocument.load(pdfBytes);
+                    
+                    // Copy the page and add it after the original
+                    const [page] = await workingDoc.copyPages(workingDoc, [pageIndex]);
+                    workingDoc.insertPage(pageIndex + 1, page);
+                    
+                    // Update our references
+                    const newBytes = await workingDoc.save();
+                    pdfDoc = await PDFDocument.load(newBytes);
+                    pdfBytes = newBytes;
+                    
+                    // Redisplay all pages (simpler than trying to insert just the new one)
+                    await displayPages();
+                    
+                } catch (error) {
+                    console.error('Error duplicating page:', error);
+                    alert('Error duplicating page. Please try again.');
+                }
+            }
+
+            // Remove a page
+            async function removePage(pageIndex) {
+                try {
+                    const { PDFDocument } = PDFLib;
+                    const workingDoc = await PDFDocument.load(pdfBytes);
+                    
+                    // Remove the page
+                    workingDoc.removePage(pageIndex);
+                    
+                    // Update our references
+                    const newBytes = await workingDoc.save();
+                    pdfDoc = await PDFDocument.load(newBytes);
+                    pdfBytes = newBytes;
+                    
+                    // Redisplay all pages
+                    await displayPages();
+                    
+                } catch (error) {
+                    console.error('Error removing page:', error);
+                    alert('Error removing page. Please try again.');
+                }
+            }
+
+            // Save/export the PDF
+            async function savePDF() {
+                if (!pdfDoc) return;
+                
+                try {
+                    // Show progress
+                    savePdfBtn.disabled = true;
+                    progressContainer.style.display = 'block';
+                    updateProgress(10, 'Preparing document...');
+                    
+                    // Save the current state (in case there were changes)
+                    const bytes = await pdfDoc.save();
+                    pdfBytes = bytes;
+                    
+                    // Show results
+                    updateProgress(100, 'Completed!');
+                    await delay(500);
+                    
+                    pageCount.textContent = `${pdfDoc.getPageCount()} pages processed`;
+                    resultContainer.style.display = 'block';
+                    progressContainer.style.display = 'none';
+                    
+                } catch (error) {
+                    console.error('Error saving PDF:', error);
+                    alert('Error saving PDF. Please try again.');
+                    savePdfBtn.disabled = false;
+                    progressContainer.style.display = 'none';
+                }
+            }
+
+            // Download the PDF
+            function downloadPDF() {
+                if (!pdfBytes) return;
+                
+                try {
+                    // Create blob and download
+                    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                    saveAs(blob, `${fileName}_edited.pdf`);
+                    
+                } catch (error) {
+                    console.error('Error downloading PDF:', error);
+                    alert('Error downloading PDF.');
+                }
+            }
+
+            // Update page numbers in the display
+            function updatePageNumbers() {
+                const items = pagesList.querySelectorAll('.page-item');
+                items.forEach((item, index) => {
+                    const info = item.querySelector('small');
+                    if (info) {
+                        info.textContent = `Page ${index + 1}`;
+                    }
+                });
+            }
+
+            // Update progress display
+            function updateProgress(percent, text) {
+                progressBar.style.width = `${percent}%`;
+                progressPercent.textContent = `${Math.round(percent)}%`;
+                progressText.textContent = text;
+            }
+            
+            // Helper function for delays
+            function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+            
+            // Helper function to read file as ArrayBuffer
+            function readFileAsArrayBuffer(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+
+            // Reset tool
+            function reset() {
+                // Reset file inputs
+                fileInput.value = '';
+                addPdfInput.value = '';
+                
+                // Reset variables
+                pdfDoc = null;
+                pdfBytes = null;
+                fileName = '';
+                pageImages = [];
+                
+                // Reset UI
+                uploadArea.style.display = 'block';
+                editorContainer.style.display = 'none';
+                resultContainer.style.display = 'none';
+                progressContainer.style.display = 'none';
+                savePdfBtn.disabled = false;
+                
+                uploadArea.innerHTML = `
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h4 class="mb-2">Drop your PDF here</h4>
+                    <p class="text-muted mb-3">or click to browse your files</p>
+                    <button class="btn btn-primary px-4" id="browseBtn">
+                        <i class="fas fa-folder-open me-2"></i>Select PDF
+                    </button>
+                `;
+                
+                // Re-init browse button
+                document.getElementById('browseBtn').addEventListener('click', () => fileInput.click());
+            }
+
+            // Start the app
+            init();
+        });
+    </script>
+</body>
+</html>
