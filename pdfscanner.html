@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Scanner | PDF Toolkit Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+    <style>
+        :root {
+            --primary: #4285f4;
+            --secondary: #ffffff;
+            --accent: #ea4335;
+            --success: #34a853;
+            --light: #ffffff;
+            --text-dark: #202124;
+            --text-muted: #5f6368;
+            --border: #dadce0;
+        }
+        
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+        }
+        
+        .navbar {
+            background-color: var(--light) !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .navbar-brand {
+            font-weight: 500;
+            color: var(--primary) !important;
+        }
+        
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary) !important;
+        }
+        
+        .tool-card {
+            background: var(--light);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .tool-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.25rem;
+        }
+        
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--light);
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(66, 133, 244, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3367d6;
+            border-color: #3367d6;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: rgba(66, 133, 244, 0.1);
+        }
+        
+        .preview-container {
+            position: relative;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f1f3f4;
+            margin-bottom: 1rem;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        
+        .result-card {
+            background: rgba(52, 168, 83, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .progress-thin {
+            height: 4px;
+            background-color: #f1f3f4;
+        }
+        
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(66, 133, 244, 0.1);
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+        
+        footer {
+            background-color: var(--light) !important;
+            border-top: 1px solid var(--border);
+        }
+        
+        .scanner-controls {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        .spinner-border {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-width: 0.2em;
+        }
+        
+        .camera-feed {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            background-color: #000;
+            display: none;
+        }
+        
+        .scanner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .scanning-frame {
+            width: 80%;
+            height: 60%;
+            border: 2px dashed rgba(255, 255, 255, 0.7);
+            position: relative;
+        }
+        
+        /* Image list styles */
+        .image-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .image-thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .image-thumbnail:hover {
+            border-color: var(--primary);
+        }
+        
+        .image-thumbnail.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+        
+        /* Cropper container */
+        .cropper-container {
+            max-width: 100%;
+            max-height: 400px;
+        }
+        
+        /* Adjustment controls */
+        .adjustment-controls {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        /* Ad container styles */
+        .ad-container {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-label {
+            font-size: 0.75rem;
+            color: #5f6368;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .ad-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            border-radius: 4px;
+        }
+        
+        .error-message {
+            color: var(--accent);
+            margin-top: 1rem;
+            text-align: center;
+        }
+        
+        .page-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        /* OCR text container */
+        .ocr-text-container {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .ocr-text-line {
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        /* Auto-crop indicator */
+        .auto-crop-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            z-index: 100;
+        }
+        
+        /* Batch processing indicator */
+        .batch-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+        }
+        
+        /* Cloud storage buttons */
+        .cloud-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 0.25rem;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .cloud-btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .google-drive-btn {
+            background-color: #4285F4;
+        }
+        
+        .dropbox-btn {
+            background-color: #0061FF;
+        }
+        
+        /* OCR processing overlay */
+        .ocr-processing-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 100;
+            display: none;
+        }
+        
+        /* Edge detection visualization */
+        .edge-detection-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-file-pdf me-2"></i>PDF Toolkit Pro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link active" href="#">Tools</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Support</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="tool-card mb-3">
+                    <div class="tool-header">
+                        <h4 class="mb-0"><i class="fas fa-camera me-2"></i>Advanced PDF Scanner</h4>
+                        <p class="mb-0 opacity-75">Scan documents with OCR, auto-crop and cloud integration</p>
+                    </div>
+                    <div class="p-3">
+                        <div id="uploadArea" class="upload-zone mb-3">
+                            <div class="upload-icon">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <h5 class="mb-2">Start Scanning</h5>
+                            <p class="text-muted mb-3">Use your camera or upload existing images</p>
+                            <button class="btn btn-primary px-3" id="startScanBtn">
+                                <i class="fas fa-camera me-1"></i>Start Camera
+                            </button>
+                            <button class="btn btn-outline-primary px-3 ms-2" id="uploadImagesBtn">
+                                <i class="fas fa-images me-1"></i>Upload Images
+                            </button>
+                            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                            <div id="cameraError" class="error-message" style="display: none;"></div>
+                        </div>
+                        
+                        <div id="scannerContainer" style="display: none;">
+                            <div class="scanner-controls mb-3">
+                                <h6 class="mb-3"><i class="fas fa-cog me-2"></i>Scanner Settings</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="pageSize" class="form-label small">Page Size</label>
+                                        <select class="form-select" id="pageSize">
+                                            <option value="auto">Auto Detect</option>
+                                            <option value="a4">A4</option>
+                                            <option value="letter">Letter</option>
+                                            <option value="legal">Legal</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pageOrientation" class="form-label small">Orientation</label>
+                                        <select class="form-select" id="pageOrientation">
+                                            <option value="auto">Auto Detect</option>
+                                            <option value="portrait">Portrait</option>
+                                            <option value="landscape">Landscape</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="colorMode" class="form-label small">Color Mode</label>
+                                        <select class="form-select" id="colorMode">
+                                            <option value="color">Color</option>
+                                            <option value="grayscale">Grayscale</option>
+                                            <option value="bw">Black & White</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="dpi" class="form-label small">Quality (DPI)</label>
+                                        <select class="form-select" id="dpi">
+                                            <option value="150">150 dpi (Normal)</option>
+                                            <option value="300" selected>300 dpi (Good)</option>
+                                            <option value="600">600 dpi (High)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="autoCropToggle" checked>
+                                            <label class="form-check-label small" for="autoCropToggle">Auto-crop documents</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="ocrToggle">
+                                            <label class="form-check-label small" for="ocrToggle">Enable OCR (Text Recognition)</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="batchModeToggle">
+                                            <label class="form-check-label small" for="batchModeToggle">Batch Mode (Multiple Documents)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Image list for multiple selection -->
+                            <div id="imageListContainer" class="mb-3" style="display: none;">
+                                <h6 class="mb-2"><i class="fas fa-images me-2"></i>Scanned Pages</h6>
+                                <div id="imageList" class="image-list"></div>
+                            </div>
+                            
+                            <div class="preview-container mb-3" id="previewContainer">
+                                <div class="ocr-processing-overlay" id="ocrProcessingOverlay">
+                                    <div class="spinner-border mb-2" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p>Processing OCR...</p>
+                                </div>
+                                <canvas id="edgeDetectionCanvas" class="edge-detection-canvas"></canvas>
+                                <video id="cameraFeed" class="camera-feed" autoplay playsinline></video>
+                                <div class="scanner-overlay">
+                                    <div class="scanning-frame"></div>
+                                </div>
+                                <div class="auto-crop-indicator" id="autoCropIndicator" style="display: none;">
+                                    <i class="fas fa-crop me-1"></i>Auto-crop active
+                                </div>
+                                <img id="scannedPreview" class="preview-image" style="display: none;">
+                                <div id="noCameraMessage" class="text-center text-muted" style="display: none;">
+                                    <i class="fas fa-camera-slash fa-3x mb-2"></i>
+                                    <p>Camera not available. Please upload images instead.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- OCR Text Results -->
+                            <div id="ocrResultsContainer" class="mb-3" style="display: none;">
+                                <h6 class="mb-2"><i class="fas fa-font me-2"></i>Extracted Text</h6>
+                                <div class="ocr-text-container" id="ocrTextContent">
+                                    <!-- OCR text will be inserted here -->
+                                </div>
+                                <div class="d-flex justify-content-end mt-2">
+                                    <button class="btn btn-sm btn-outline-primary" id="copyOcrTextBtn">
+                                        <i class="fas fa-copy me-1"></i>Copy Text
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Cropper container (hidden by default) -->
+                            <div id="cropperContainer" style="display: none;">
+                                <div class="page-nav">
+                                    <h6><i class="fas fa-crop me-2"></i>Crop & Adjust</h6>
+                                    <button id="closeCropperBtn" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-times me-1"></i>Close
+                                    </button>
+                                </div>
+                                <div class="cropper-container mb-3">
+                                    <img id="imageToCrop" class="img-fluid">
+                                </div>
+                                <div class="adjustment-controls mb-3">
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <label for="brightness" class="form-label small">Brightness</label>
+                                            <input type="range" class="form-range" id="brightness" min="-100" max="100" value="0">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="contrast" class="form-label small">Contrast</label>
+                                            <input type="range" class="form-range" id="contrast" min="-100" max="100" value="0">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="rotation" class="form-label small">Rotation</label>
+                                            <input type="range" class="form-range" id="rotation" min="-180" max="180" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2 mt-3">
+                                        <button id="resetAdjustmentsBtn" class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-undo me-1"></i>Reset
+                                        </button>
+                                        <button id="applyCropBtn" class="btn btn-primary btn-sm ms-auto">
+                                            <i class="fas fa-check me-1"></i>Apply Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-2 justify-content-between mb-3">
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-primary" id="captureBtn">
+                                        <i class="fas fa-camera me-1"></i>Capture
+                                    </button>
+                                    <button class="btn btn-outline-primary" id="retakeBtn" style="display: none;">
+                                        <i class="fas fa-redo me-1"></i>Retake
+                                    </button>
+                                    <button class="btn btn-outline-primary" id="cropBtn" style="display: none;">
+                                        <i class="fas fa-crop me-1"></i>Crop
+                                    </button>
+                                </div>
+                                <button class="btn btn-primary" id="generatePdfBtn" disabled>
+                                    <i class="fas fa-file-pdf me-1"></i>Generate PDF
+                                </button>
+                            </div>
+                            
+                            <div id="progressContainer" class="mt-3" style="display: none;">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small id="progressText">Processing...</small>
+                                    <small id="progressPercent">0%</small>
+                                </div>
+                                <div class="progress progress-thin">
+                                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <div id="resultContainer" class="result-card p-3 mt-3" style="display: none;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>PDF Created</h5>
+                                        <p class="text-muted mb-0" id="pageCount">1 page scanned</p>
+                                    </div>
+                                    <span class="badge bg-success">Ready</span>
+                                </div>
+                                
+                                <div class="d-flex flex-wrap gap-2 justify-content-end">
+                                    <button id="downloadBtn" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-file-pdf me-1"></i>Download
+                                    </button>
+                                    <button id="shareBtn" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-share-alt me-1"></i>Share
+                                    </button>
+                                    <button id="newScanBtn" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-redo me-1"></i>New Scan
+                                    </button>
+                                    <a href="#" id="saveToDriveBtn" class="cloud-btn google-drive-btn btn-sm" target="_blank">
+                                        <i class="fab fa-google-drive"></i>Save to Drive
+                                    </a>
+                                    <a href="#" id="saveToDropboxBtn" class="cloud-btn dropbox-btn btn-sm" target="_blank">
+                                        <i class="fab fa-dropbox"></i>Save to Dropbox
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Mobile Friendly</h6>
+                            <p class="text-muted small text-center">Scan directly from your phone's camera</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-font"></i>
+                            </div>
+                            <h6 class="text-center mb-2">OCR Text</h6>
+                            <p class="text-muted small text-center">Extract text from scanned documents</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Cloud Save</h6>
+                            <p class="text-muted small text-center">Save directly to Google Drive or Dropbox</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Auto-Crop</h6>
+                            <p class="text-muted small text-center">Automatically detects document edges</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Ad Container -->
+                <div class="ad-container mb-4">
+                    <div class="ad-label">Advertisement</div>
+                    <div class="ad-placeholder">
+                        <div>Ad Space (300x250)</div>
+                    </div>
+                </div>
+                
+                <div class="p-3 mb-3 bg-white rounded border">
+                    <h5 class="mb-2"><i class="fas fa-tools me-2"></i>Other Tools</h5>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-primary">
+                                    <i class="fas fa-crop"></i>
+                                </div>
+                                <div>Crop PDF</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-success">
+                                    <i class="fas fa-share-alt"></i>
+                                </div>
+                                <div>Share PDF</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-warning">
+                                    <i class="fas fa-compress-alt"></i>
+                                </div>
+                                <div>Compress PDF</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-danger">
+                                    <i class="fas fa-font"></i>
+                                </div>
+                                <div>OCR PDF</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="p-3 bg-white rounded border">
+                    <h5 class="mb-2"><i class="fas fa-lightbulb me-2"></i>Scanning Tips</h5>
+                    <ul class="small text-muted">
+                        <li class="mb-2">Place document on a flat, well-lit surface</li>
+                        <li class="mb-2">Align document edges with the on-screen frame</li>
+                        <li class="mb-2">Hold steady while capturing the image</li>
+                        <li class="mb-2">Use black & white mode for text documents</li>
+                        <li>Enable OCR for editable text from scanned documents</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Batch Processing Indicator -->
+    <div class="batch-indicator" id="batchIndicator">
+        <i class="fas fa-tasks me-2"></i>
+        <span id="batchStatusText">Batch Mode: Document 1 of 3</span>
+    </div>
+
+    <footer class="py-3 mt-4 bg-white border-top">
+        <div class="container text-center">
+            <p class="text-muted small mb-0">&copy; 2023 PDF Toolkit Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Tesseract.js for OCR -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/opencv.js@1.2.1/opencv.min.js" async></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const startScanBtn = document.getElementById('startScanBtn');
+            const uploadImagesBtn = document.getElementById('uploadImagesBtn');
+            const fileInput = document.getElementById('fileInput');
+            const scannerContainer = document.getElementById('scannerContainer');
+            const cameraFeed = document.getElementById('cameraFeed');
+            const scannedPreview = document.getElementById('scannedPreview');
+            const previewContainer = document.getElementById('previewContainer');
+            const captureBtn = document.getElementById('captureBtn');
+            const retakeBtn = document.getElementById('retakeBtn');
+            const cropBtn = document.getElementById('cropBtn');
+            const generatePdfBtn = document.getElementById('generatePdfBtn');
+            const pageSize = document.getElementById('pageSize');
+            const pageOrientation = document.getElementById('pageOrientation');
+            const colorMode = document.getElementById('colorMode');
+            const dpi = document.getElementById('dpi');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressText = document.getElementById('progressText');
+            const resultContainer = document.getElementById('resultContainer');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const shareBtn = document.getElementById('shareBtn');
+            const newScanBtn = document.getElementById('newScanBtn');
+            const pageCount = document.getElementById('pageCount');
+            const noCameraMessage = document.getElementById('noCameraMessage');
+            const cameraError = document.getElementById('cameraError');
+            const imageListContainer = document.getElementById('imageListContainer');
+            const imageList = document.getElementById('imageList');
+            const cropperContainer = document.getElementById('cropperContainer');
+            const imageToCrop = document.getElementById('imageToCrop');
+            const closeCropperBtn = document.getElementById('closeCropperBtn');
+            const brightness = document.getElementById('brightness');
+            const contrast = document.getElementById('contrast');
+            const rotation = document.getElementById('rotation');
+            const resetAdjustmentsBtn = document.getElementById('resetAdjustmentsBtn');
+            const applyCropBtn = document.getElementById('applyCropBtn');
+            const autoCropToggle = document.getElementById('autoCropToggle');
+            const ocrToggle = document.getElementById('ocrToggle');
+            const batchModeToggle = document.getElementById('batchModeToggle');
+            const ocrResultsContainer = document.getElementById('ocrResultsContainer');
+            const ocrTextContent = document.getElementById('ocrTextContent');
+            const copyOcrTextBtn = document.getElementById('copyOcrTextBtn');
+            const saveToDriveBtn = document.getElementById('saveToDriveBtn');
+            const saveToDropboxBtn = document.getElementById('saveToDropboxBtn');
+            const ocrProcessingOverlay = document.getElementById('ocrProcessingOverlay');
+            const autoCropIndicator = document.getElementById('autoCropIndicator');
+            const edgeDetectionCanvas = document.getElementById('edgeDetectionCanvas');
+            const batchIndicator = document.getElementById('batchIndicator');
+            const batchStatusText = document.getElementById('batchStatusText');
+
+            // State variables
+            let stream = null;
+            let capturedImages = [];
+            let currentPdfBytes = null;
+            let isCameraAvailable = true;
+            let currentImageIndex = 0;
+            let cropper = null;
+            let batchMode = false;
+            let currentBatch = 1;
+            let totalBatches = 1;
+            let ocrWorker = null;
+            let cvReady = false;
+
+            // Check if OpenCV.js is loaded
+            function onOpenCvReady() {
+                cvReady = true;
+                console.log('OpenCV.js is ready');
+            }
+
+            // Initialize the application
+            function init() {
+                // Check camera availability
+                checkCameraAvailability();
+                
+                // Set up OCR worker
+                setupOCRWorker();
+                
+                // Check for OpenCV.js
+                if (window.cv) {
+                    onOpenCvReady();
+                } else {
+                    // If OpenCV.js hasn't loaded yet, set up a callback
+                    window.onOpenCvReady = onOpenCvReady;
+                }
+                
+                // Event listeners
+                startScanBtn.addEventListener('click', startCamera);
+                uploadImagesBtn.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', handleFileSelect);
+                captureBtn.addEventListener('click', captureImage);
+                retakeBtn.addEventListener('click', retakeImage);
+                cropBtn.addEventListener('click', openCropper);
+                generatePdfBtn.addEventListener('click', generatePdf);
+                downloadBtn.addEventListener('click', downloadPdf);
+                shareBtn.addEventListener('click', sharePdf);
+                newScanBtn.addEventListener('click', resetScanner);
+                closeCropperBtn.addEventListener('click', closeCropper);
+                brightness.addEventListener('input', updateImageAdjustments);
+                contrast.addEventListener('input', updateImageAdjustments);
+                rotation.addEventListener('input', updateImageAdjustments);
+                resetAdjustmentsBtn.addEventListener('click', resetAdjustments);
+                applyCropBtn.addEventListener('click', applyCrop);
+                autoCropToggle.addEventListener('change', toggleAutoCrop);
+                ocrToggle.addEventListener('change', toggleOCR);
+                batchModeToggle.addEventListener('change', toggleBatchMode);
+                copyOcrTextBtn.addEventListener('click', copyOCRText);
+                saveToDriveBtn.addEventListener('click', saveToGoogleDrive);
+                saveToDropboxBtn.addEventListener('click', saveToDropbox);
+            }
+
+            // Set up OCR worker
+            function setupOCRWorker() {
+                ocrWorker = Tesseract.createWorker({
+                    logger: m => console.log(m),
+                    errorHandler: err => console.error(err)
+                });
+                
+                (async () => {
+                    await ocrWorker.load();
+                    await ocrWorker.loadLanguage('eng');
+                    await ocrWorker.initialize('eng');
+                })();
+            }
+
+            // Check if camera is available
+            async function checkCameraAvailability() {
+                try {
+                    // First check if we have permission
+                    if (navigator.permissions) {
+                        const permissionStatus = await navigator.permissions.query({ name: 'camera' });
+                        if (permissionStatus.state === 'denied') {
+                            isCameraAvailable = false;
+                            handleCameraUnavailable("Camera access denied. Please enable camera permissions in your browser settings.");
+                            return;
+                        }
+                    }
+                    
+                    // Then check for actual devices
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    const hasCamera = devices.some(device => device.kind === 'videoinput');
+                    isCameraAvailable = hasCamera;
+                    
+                    if (!hasCamera) {
+                        handleCameraUnavailable("No camera detected on this device");
+                    }
+                } catch (error) {
+                    console.error('Error checking camera availability:', error);
+                    isCameraAvailable = false;
+                    handleCameraUnavailable("Could not access camera. Please check permissions.");
+                }
+            }
+
+            function handleCameraUnavailable(message) {
+                startScanBtn.disabled = true;
+                cameraError.textContent = message;
+                cameraError.style.display = 'block';
+                noCameraMessage.style.display = 'block';
+            }
+
+            // Toggle auto-crop feature
+            function toggleAutoCrop() {
+                if (autoCropToggle.checked) {
+                    autoCropIndicator.style.display = 'block';
+                } else {
+                    autoCropIndicator.style.display = 'none';
+                }
+            }
+
+            // Toggle OCR feature
+            function toggleOCR() {
+                if (ocrToggle.checked && capturedImages.length > 0) {
+                    // If we have images and OCR is enabled, process them
+                    processOCRForCurrentImage();
+                } else {
+                    ocrResultsContainer.style.display = 'none';
+                }
+            }
+
+            // Toggle batch mode
+            function toggleBatchMode() {
+                batchMode = batchModeToggle.checked;
+                if (batchMode) {
+                    batchIndicator.style.display = 'block';
+                    updateBatchStatus();
+                } else {
+                    batchIndicator.style.display = 'none';
+                }
+            }
+
+            // Update batch status indicator
+            function updateBatchStatus() {
+                batchStatusText.textContent = `Batch Mode: Document ${currentBatch} of ${totalBatches}`;
+            }
+
+            // Start camera for scanning
+            async function startCamera() {
+                if (!isCameraAvailable) {
+                    cameraError.textContent = "Camera not available on this device";
+                    cameraError.style.display = 'block';
+                    return;
+                }
+                
+                try {
+                    startScanBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Starting...';
+                    startScanBtn.disabled = true;
+                    
+                    // Get camera access
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            facingMode: 'environment',
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        },
+                        audio: false 
+                    });
+                    
+                    // Show camera feed
+                    cameraFeed.srcObject = stream;
+                    cameraFeed.style.display = 'block';
+                    noCameraMessage.style.display = 'none';
+                    cameraError.style.display = 'none';
+                    
+                    // Show scanner interface
+                    uploadArea.style.display = 'none';
+                    scannerContainer.style.display = 'block';
+                    
+                    // Clear any previous images
+                    capturedImages = [];
+                    imageList.innerHTML = '';
+                    imageListContainer.style.display = 'none';
+                    
+                    // Show auto-crop indicator if enabled
+                    toggleAutoCrop();
+                    
+                } catch (error) {
+                    console.error('Error accessing camera:', error);
+                    isCameraAvailable = false;
+                    handleCameraUnavailable("Could not access camera. Please check permissions.");
+                    
+                    // If this is a permission error, update our availability status
+                    if (error.name === 'NotAllowedError') {
+                        isCameraAvailable = false;
+                    }
+                } finally {
+                    startScanBtn.innerHTML = '<i class="fas fa-camera me-1"></i>Start Camera';
+                    startScanBtn.disabled = false;
+                }
+            }
+
+            // Handle file selection for image upload
+            function handleFileSelect(event) {
+                const files = event.target.files;
+                if (!files || files.length === 0) return;
+                
+                // Convert FileList to array
+                const fileArray = Array.from(files);
+                
+                // Check if all files are images
+                const allImages = fileArray.every(file => file.type.startsWith('image/'));
+                if (!allImages) {
+                    alert('Please select only image files');
+                    return;
+                }
+                
+                // Process images
+                processImages(fileArray);
+            }
+
+            // Process selected images
+            function processImages(files) {
+                // Show scanner interface
+                uploadArea.style.display = 'none';
+                scannerContainer.style.display = 'block';
+                
+                // Hide camera feed (we're using uploaded images)
+                cameraFeed.style.display = 'none';
+                noCameraMessage.style.display = 'none';
+                
+                // Clear previous images
+                capturedImages = [];
+                imageList.innerHTML = '';
+                
+                // Process each file
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageData = e.target.result;
+                        capturedImages.push({
+                            original: imageData,
+                            modified: imageData,
+                            brightness: 0,
+                            contrast: 0,
+                            rotation: 0,
+                            cropData: null,
+                            ocrText: null
+                        });
+                        
+                        // Add to image list
+                        addImageToThumbnails(imageData, capturedImages.length - 1);
+                        
+                        // Show first image as preview
+                        if (capturedImages.length === 1) {
+                            showImagePreview(0);
+                        }
+                        
+                        // Update UI
+                        updateUIAfterImageAdd();
+                    };
+                    reader.onerror = function() {
+                        console.error('Error reading file:', file.name);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Add image to thumbnails list
+            function addImageToThumbnails(imageData, index) {
+                const img = document.createElement('img');
+                img.src = imageData;
+                img.className = 'image-thumbnail';
+                img.dataset.index = index;
+                img.addEventListener('click', () => showImagePreview(index));
+                
+                imageList.appendChild(img);
+                imageListContainer.style.display = 'block';
+            }
+
+            // Show image preview
+            function showImagePreview(index) {
+                currentImageIndex = index;
+                const imageData = capturedImages[index].modified;
+                scannedPreview.src = imageData;
+                scannedPreview.style.display = 'block';
+                
+                // Highlight selected thumbnail
+                document.querySelectorAll('.image-thumbnail').forEach((thumb, i) => {
+                    thumb.classList.toggle('active', i === index);
+                });
+                
+                // Show/hide buttons based on context
+                if (stream) {
+                    // Camera mode
+                    retakeBtn.style.display = 'inline-block';
+                    cropBtn.style.display = 'inline-block';
+                } else {
+                    // Upload mode
+                    retakeBtn.style.display = 'none';
+                    cropBtn.style.display = 'inline-block';
+                }
+                
+                // Process OCR if enabled
+                if (ocrToggle.checked) {
+                    processOCRForCurrentImage();
+                } else {
+                    ocrResultsContainer.style.display = 'none';
+                }
+            }
+
+            // Process OCR for current image
+            async function processOCRForCurrentImage() {
+                if (capturedImages.length === 0 || !ocrToggle.checked) return;
+                
+                const currentImage = capturedImages[currentImageIndex];
+                
+                // If we already have OCR text, just display it
+                if (currentImage.ocrText) {
+                    displayOCRText(currentImage.ocrText);
+                    return;
+                }
+                
+                // Show processing overlay
+                ocrProcessingOverlay.style.display = 'flex';
+                
+                try {
+                    // Perform OCR
+                    const result = await ocrWorker.recognize(currentImage.modified);
+                    
+                    // Store OCR text
+                    currentImage.ocrText = result.data.text;
+                    
+                    // Display the text
+                    displayOCRText(result.data.text);
+                    
+                } catch (error) {
+                    console.error('OCR Error:', error);
+                    ocrTextContent.innerHTML = '<p class="text-danger">Error processing OCR. Please try again.</p>';
+                } finally {
+                    ocrProcessingOverlay.style.display = 'none';
+                }
+            }
+
+            // Display OCR text
+            function displayOCRText(text) {
+                if (!text || !text.trim()) {
+                    ocrTextContent.innerHTML = '<p class="text-muted">No text detected in this image.</p>';
+                } else {
+                    // Split text into lines and create paragraphs
+                    const lines = text.split('\n').filter(line => line.trim() !== '');
+                    ocrTextContent.innerHTML = lines.map(line => 
+                        `<p class="ocr-text-line">${line}</p>`
+                    ).join('');
+                }
+                
+                // Show the container
+                ocrResultsContainer.style.display = 'block';
+            }
+
+            // Copy OCR text to clipboard
+            async function copyOCRText() {
+                const currentImage = capturedImages[currentImageIndex];
+                if (!currentImage || !currentImage.ocrText) return;
+                
+                try {
+                    await navigator.clipboard.writeText(currentImage.ocrText);
+                    // Show feedback
+                    const originalText = copyOcrTextBtn.innerHTML;
+                    copyOcrTextBtn.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+                    setTimeout(() => {
+                        copyOcrTextBtn.innerHTML = originalText;
+                    }, 2000);
+                } catch (error) {
+                    console.error('Failed to copy text:', error);
+                }
+            }
+
+            // Update UI after adding images
+            function updateUIAfterImageAdd() {
+                generatePdfBtn.disabled = false;
+                captureBtn.innerHTML = capturedImages.length > 1 ? 
+                    `<i class="fas fa-plus me-1"></i>Add More (${capturedImages.length})` : 
+                    '<i class="fas fa-camera me-1"></i>Capture';
+                
+                // Update batch status if in batch mode
+                if (batchMode) {
+                    totalBatches = capturedImages.length;
+                    updateBatchStatus();
+                }
+            }
+
+            // Capture image from camera
+            async function captureImage() {
+                if (!stream) return;
+                
+                try {
+                    // Create canvas to capture frame
+                    const canvas = document.createElement('canvas');
+                    canvas.width = cameraFeed.videoWidth;
+                    canvas.height = cameraFeed.videoHeight;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(cameraFeed, 0, 0, canvas.width, canvas.height);
+                    
+                    let imageData = canvas.toDataURL('image/jpeg', 0.9);
+                    
+                    // Apply auto-crop if enabled
+                    if (autoCropToggle.checked && cvReady) {
+                        try {
+                            imageData = await autoCropDocument(imageData);
+                        } catch (error) {
+                            console.error('Auto-crop failed:', error);
+                        }
+                    }
+                    
+                    // Add to captured images
+                    capturedImages.push({
+                        original: imageData,
+                        modified: imageData,
+                        brightness: 0,
+                        contrast: 0,
+                        rotation: 0,
+                        cropData: null,
+                        ocrText: null
+                    });
+                    
+                    // Add to image list
+                    addImageToThumbnails(imageData, capturedImages.length - 1);
+                    
+                    // Show preview
+                    showImagePreview(capturedImages.length - 1);
+                    cameraFeed.style.display = 'none';
+                    
+                    // Update UI
+                    updateUIAfterImageAdd();
+                    
+                    // If in batch mode and more documents to scan, prepare for next
+                    if (batchMode && currentBatch < totalBatches) {
+                        currentBatch++;
+                        updateBatchStatus();
+                        setTimeout(() => {
+                            cameraFeed.style.display = 'block';
+                            scannedPreview.style.display = 'none';
+                        }, 1000);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error capturing image:', error);
+                    alert('Error capturing image. Please try again.');
+                }
+            }
+
+            // Auto-crop document using OpenCV.js
+            async function autoCropDocument(imageData) {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onload = function() {
+                        try {
+                            // Create canvas with the image
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                            
+                            // Convert to OpenCV format
+                            const src = cv.imread(canvas);
+                            const dst = new cv.Mat();
+                            const gray = new cv.Mat();
+                            const edges = new cv.Mat();
+                            const hierarchy = new cv.Mat();
+                            
+                            // Convert to grayscale
+                            cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+                            
+                            // Apply Gaussian blur
+                            cv.GaussianBlur(gray, gray, new cv.Size(5, 5), 0);
+                            
+                            // Detect edges
+                            cv.Canny(gray, edges, 75, 200);
+                            
+                            // Find contours
+                            const contours = new cv.MatVector();
+                            cv.findContours(edges, contours, hierarchy, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
+                            
+                            // Find the largest rectangle (document)
+                            let maxArea = 0;
+                            let maxContour = null;
+                            
+                            for (let i = 0; i < contours.size(); ++i) {
+                                const contour = contours.get(i);
+                                const perimeter = cv.arcLength(contour, true);
+                                const approx = new cv.Mat();
+                                cv.approxPolyDP(contour, approx, 0.02 * perimeter, true);
+                                
+                                if (approx.rows === 4) {
+                                    const area = cv.contourArea(approx);
+                                    if (area > maxArea) {
+                                        maxArea = area;
+                                        maxContour = approx;
+                                    }
+                                }
+                                approx.delete();
+                            }
+                            
+                            if (maxContour) {
+                                // Get the four corners
+                                const corners = [];
+                                for (let i = 0; i < 4; i++) {
+                                    corners.push({
+                                        x: maxContour.data32S[i * 2],
+                                        y: maxContour.data32S[i * 2 + 1]
+                                    });
+                                }
+                                
+                                // Order points: top-left, top-right, bottom-right, bottom-left
+                                corners.sort((a, b) => a.y - b.y);
+                                const top = corners.slice(0, 2).sort((a, b) => a.x - b.x);
+                                const bottom = corners.slice(2, 4).sort((a, b) => a.x - b.x);
+                                const orderedCorners = [...top, ...bottom.reverse()];
+                                
+                                // Calculate width and height of the new image
+                                const width = Math.max(
+                                    Math.sqrt(Math.pow(orderedCorners[1].x - orderedCorners[0].x, 2) + Math.pow(orderedCorners[1].y - orderedCorners[0].y, 2)),
+                                    Math.sqrt(Math.pow(orderedCorners[2].x - orderedCorners[3].x, 2) + Math.pow(orderedCorners[2].y - orderedCorners[3].y, 2))
+                                );
+                                
+                                const height = Math.max(
+                                    Math.sqrt(Math.pow(orderedCorners[3].x - orderedCorners[0].x, 2) + Math.pow(orderedCorners[3].y - orderedCorners[0].y, 2)),
+                                    Math.sqrt(Math.pow(orderedCorners[2].x - orderedCorners[1].x, 2) + Math.pow(orderedCorners[2].y - orderedCorners[1].y, 2))
+                                );
+                                
+                                // Destination points for perspective transform
+                                const dstPoints = [
+                                    { x: 0, y: 0 },
+                                    { x: width - 1, y: 0 },
+                                    { x: width - 1, y: height - 1 },
+                                    { x: 0, y: height - 1 }
+                                ];
+                                
+                                // Create perspective transform matrix
+                                const srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, orderedCorners.flatMap(p => [p.x, p.y]));
+                                const dstTri = cv.matFromArray(4, 1, cv.CV_32FC2, dstPoints.flatMap(p => [p.x, p.y]));
+                                const M = cv.getPerspectiveTransform(srcTri, dstTri);
+                                
+                                // Apply perspective transform
+                                cv.warpPerspective(src, dst, M, new cv.Size(width, height));
+                                
+                                // Convert back to canvas
+                                cv.imshow(canvas, dst);
+                                
+                                // Clean up
+                                srcTri.delete();
+                                dstTri.delete();
+                                M.delete();
+                            }
+                            
+                            // Clean up
+                            src.delete();
+                            dst.delete();
+                            gray.delete();
+                            edges.delete();
+                            hierarchy.delete();
+                            contours.delete();
+                            
+                            // Return the cropped image
+                            resolve(canvas.toDataURL('image/jpeg', 0.9));
+                            
+                        } catch (error) {
+                            console.error('OpenCV processing error:', error);
+                            // If auto-crop fails, return original image
+                            resolve(imageData);
+                        }
+                    };
+                    img.onerror = reject;
+                    img.src = imageData;
+                });
+            }
+
+            // Retake the current image
+            function retakeImage() {
+                if (capturedImages.length === 0) return;
+                
+                // Remove current image
+                capturedImages.splice(currentImageIndex, 1);
+                imageList.innerHTML = '';
+                
+                // Rebuild thumbnails
+                capturedImages.forEach((img, index) => {
+                    addImageToThumbnails(img.modified, index);
+                });
+                
+                if (capturedImages.length === 0) {
+                    // No images left, show camera again
+                    scannedPreview.style.display = 'none';
+                    cameraFeed.style.display = 'block';
+                    generatePdfBtn.disabled = true;
+                    retakeBtn.style.display = 'none';
+                    cropBtn.style.display = 'none';
+                    imageListContainer.style.display = 'none';
+                    captureBtn.innerHTML = '<i class="fas fa-camera me-1"></i>Capture';
+                } else {
+                    // Show previous image
+                    const newIndex = Math.min(currentImageIndex, capturedImages.length - 1);
+                    showImagePreview(newIndex);
+                }
+                
+                // Update batch status
+                if (batchMode) {
+                    totalBatches = capturedImages.length;
+                    updateBatchStatus();
+                }
+            }
+
+            // Open cropper for current image
+            function openCropper() {
+                if (capturedImages.length === 0) return;
+                
+                const currentImage = capturedImages[currentImageIndex];
+                imageToCrop.src = currentImage.original;
+                
+                // Hide preview and show cropper
+                scannedPreview.style.display = 'none';
+                cropperContainer.style.display = 'block';
+                
+                // Initialize cropper
+                if (cropper) {
+                    cropper.destroy();
+                }
+                
+                cropper = new Cropper(imageToCrop, {
+                    aspectRatio: NaN,
+                    viewMode: 1,
+                    autoCropArea: 0.8,
+                    responsive: true,
+                    guides: true,
+                    background: false,
+                    ready: function() {
+                        // Apply previous crop if exists
+                        if (currentImage.cropData) {
+                            cropper.setData(currentImage.cropData);
+                        }
+                        
+                        // Apply previous adjustments
+                        brightness.value = currentImage.brightness;
+                        contrast.value = currentImage.contrast;
+                        rotation.value = currentImage.rotation;
+                        
+                        updateImageAdjustments();
+                    }
+                });
+            }
+
+            // Close cropper
+            function closeCropper() {
+                cropperContainer.style.display = 'none';
+                scannedPreview.style.display = 'block';
+                
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+            }
+
+            // Update image adjustments
+            function updateImageAdjustments() {
+                if (!cropper) return;
+                
+                const brightnessValue = parseInt(brightness.value);
+                const contrastValue = parseInt(contrast.value);
+                const rotationValue = parseInt(rotation.value);
+                
+                // Apply filters to the image
+                imageToCrop.style.filter = `brightness(${100 + brightnessValue}%) contrast(${100 + contrastValue}%)`;
+                imageToCrop.style.transform = `rotate(${rotationValue}deg)`;
+            }
+
+            // Reset adjustments
+            function resetAdjustments() {
+                brightness.value = 0;
+                contrast.value = 0;
+                rotation.value = 0;
+                updateImageAdjustments();
+                
+                if (cropper) {
+                    cropper.reset();
+                }
+            }
+
+            // Apply crop and adjustments
+            function applyCrop() {
+                if (!cropper || capturedImages.length === 0) return;
+                
+                try {
+                    // Get canvas with cropped and adjusted image
+                    const canvas = cropper.getCroppedCanvas({
+                        width: 1200,
+                        height: 1600,
+                        minWidth: 256,
+                        minHeight: 256,
+                        maxWidth: 4096,
+                        maxHeight: 4096,
+                        fillColor: '#fff',
+                        imageSmoothingEnabled: true,
+                        imageSmoothingQuality: 'high',
+                    });
+                    
+                    if (!canvas) {
+                        throw new Error('Cropping failed');
+                    }
+                    
+                    // Apply brightness/contrast adjustments
+                    const brightnessValue = parseInt(brightness.value);
+                    const contrastValue = parseInt(contrast.value);
+                    const rotationValue = parseInt(rotation.value);
+                    
+                    const ctx = canvas.getContext('2d');
+                    ctx.filter = `brightness(${100 + brightnessValue}%) contrast(${100 + contrastValue}%)`;
+                    ctx.drawImage(canvas, 0, 0);
+                    
+                    // Get the image data
+                    const imageData = canvas.toDataURL('image/jpeg', 0.9);
+                    
+                    // Update the image in our array
+                    capturedImages[currentImageIndex] = {
+                        ...capturedImages[currentImageIndex],
+                        modified: imageData,
+                        brightness: brightnessValue,
+                        contrast: contrastValue,
+                        rotation: rotationValue,
+                        cropData: cropper.getData()
+                    };
+                    
+                    // Update thumbnail
+                    const thumbnails = document.querySelectorAll('.image-thumbnail');
+                    if (thumbnails[currentImageIndex]) {
+                        thumbnails[currentImageIndex].src = imageData;
+                    }
+                    
+                    // Close cropper and show preview
+                    closeCropper();
+                    scannedPreview.src = imageData;
+                    
+                    // If OCR is enabled, reprocess the text
+                    if (ocrToggle.checked) {
+                        capturedImages[currentImageIndex].ocrText = null;
+                        processOCRForCurrentImage();
+                    }
+                    
+                } catch (error) {
+                    console.error('Error applying crop:', error);
+                    alert('Error applying crop. Please try again.');
+                }
+            }
+
+            // Generate PDF from captured images
+            async function generatePdf() {
+                if (capturedImages.length === 0) return;
+                
+                try {
+                    // Show progress
+                    progressContainer.style.display = 'block';
+                    resultContainer.style.display = 'none';
+                    generatePdfBtn.disabled = true;
+                    generatePdfBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Creating PDF...';
+                    
+                    // Create a new PDF document
+                    const { PDFDocument, rgb } = PDFLib;
+                    const pdfDoc = await PDFDocument.create();
+                    
+                    // Track progress
+                    let processed = 0;
+                    const total = capturedImages.length;
+                    
+                    // Process each image
+                    for (const image of capturedImages) {
+                        try {
+                            // Convert data URL to Uint8Array
+                            const imageBytes = await fetch(image.modified).then(res => res.arrayBuffer());
+                            
+                            // Embed the image in the PDF
+                            let pdfImage;
+                            if (image.modified.startsWith('data:image/jpeg')) {
+                                pdfImage = await pdfDoc.embedJpg(imageBytes);
+                            } else if (image.modified.startsWith('data:image/png')) {
+                                pdfImage = await pdfDoc.embedPng(imageBytes);
+                            } else {
+                                // Default to JPEG
+                                pdfImage = await pdfDoc.embedJpg(imageBytes);
+                            }
+                            
+                            // Add a page with the image dimensions
+                            const page = pdfDoc.addPage([pdfImage.width, pdfImage.height]);
+                            page.drawImage(pdfImage, {
+                                x: 0,
+                                y: 0,
+                                width: pdfImage.width,
+                                height: pdfImage.height,
+                            });
+                            
+                            // If OCR text exists, add it as invisible text layer
+                            if (image.ocrText && image.ocrText.trim() !== '') {
+                                const textWidth = pdfImage.width * 0.9;
+                                const textHeight = pdfImage.height * 0.9;
+                                const fontSize = 12;
+                                
+                                // Create a text layer
+                                page.drawText(image.ocrText, {
+                                    x: (pdfImage.width - textWidth) / 2,
+                                    y: (pdfImage.height - textHeight) / 2,
+                                    size: fontSize,
+                                    color: rgb(0, 0, 0),
+                                    opacity: 0, // Make text invisible but selectable
+                                    maxWidth: textWidth,
+                                    lineHeight: fontSize * 1.2
+                                });
+                            }
+                            
+                            // Update progress
+                            processed++;
+                            const percent = Math.round((processed / total) * 100);
+                            progressBar.style.width = `${percent}%`;
+                            progressPercent.textContent = `${percent}%`;
+                        } catch (error) {
+                            console.error('Error processing image:', error);
+                        }
+                    }
+                    
+                    // Save the PDF
+                    const pdfBytes = await pdfDoc.save();
+                    currentPdfBytes = pdfBytes;
+                    
+                    // Show result
+                    progressContainer.style.display = 'none';
+                    resultContainer.style.display = 'block';
+                    pageCount.textContent = `${capturedImages.length} page${capturedImages.length !== 1 ? 's' : ''} scanned`;
+                    
+                    // Update cloud storage links
+                    updateCloudStorageLinks(pdfBytes);
+                    
+                } catch (error) {
+                    console.error('Error generating PDF:', error);
+                    alert('Error generating PDF. Please try again.');
+                } finally {
+                    generatePdfBtn.disabled = false;
+                    generatePdfBtn.innerHTML = '<i class="fas fa-file-pdf me-1"></i>Generate PDF';
+                }
+            }
+
+            // Update cloud storage links with the PDF
+            function updateCloudStorageLinks(pdfBytes) {
+                // Create a blob URL for the PDF
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const pdfUrl = URL.createObjectURL(blob);
+                const pdfName = 'scanned-document.pdf';
+                
+                // Google Drive
+                saveToDriveBtn.href = `https://drive.google.com/u/0/get_video_info?docid=`;
+                saveToDriveBtn.onclick = (e) => {
+                    e.preventDefault();
+                    window.open(`https://drive.google.com/drive/u/0/my-drive?upload=true&usp=upload_widget&url=${encodeURIComponent(pdfUrl)}&title=${encodeURIComponent(pdfName)}`, '_blank');
+                };
+                
+                // Dropbox
+                saveToDropboxBtn.href = '#';
+                saveToDropboxBtn.onclick = (e) => {
+                    e.preventDefault();
+                    const dropboxScript = document.createElement('script');
+                    dropboxScript.type = 'text/javascript';
+                    dropboxScript.src = 'https://www.dropbox.com/static/api/2/dropins.js';
+                    dropboxScript.setAttribute('data-app-key', 'YOUR_DROPBOX_APP_KEY');
+                    dropboxScript.onload = function() {
+                        Dropbox.save({
+                            files: [{
+                                url: pdfUrl,
+                                filename: pdfName
+                            }],
+                            success: function() {
+                                console.log('File saved to Dropbox');
+                            },
+                            progress: function(progress) {
+                                console.log('Upload progress:', progress);
+                            },
+                            cancel: function() {
+                                console.log('Upload cancelled');
+                            },
+                            error: function(error) {
+                                console.error('Dropbox error:', error);
+                            }
+                        });
+                    };
+                    document.body.appendChild(dropboxScript);
+                };
+            }
+
+            // Save to Google Drive
+            function saveToGoogleDrive(e) {
+                e.preventDefault();
+                if (!currentPdfBytes) return;
+                
+                const blob = new Blob([currentPdfBytes], { type: 'application/pdf' });
+                const pdfUrl = URL.createObjectURL(blob);
+                const pdfName = 'scanned-document.pdf';
+                
+                window.open(`https://drive.google.com/drive/u/0/my-drive?upload=true&usp=upload_widget&url=${encodeURIComponent(pdfUrl)}&title=${encodeURIComponent(pdfName)}`, '_blank');
+            }
+
+            // Save to Dropbox
+            function saveToDropbox(e) {
+                e.preventDefault();
+                if (!currentPdfBytes) return;
+                
+                const blob = new Blob([currentPdfBytes], { type: 'application/pdf' });
+                const pdfUrl = URL.createObjectURL(blob);
+                const pdfName = 'scanned-document.pdf';
+                
+                const dropboxScript = document.createElement('script');
+                dropboxScript.type = 'text/javascript';
+                dropboxScript.src = 'https://www.dropbox.com/static/api/2/dropins.js';
+                dropboxScript.setAttribute('data-app-key', 'YOUR_DROPBOX_APP_KEY');
+                dropboxScript.onload = function() {
+                    Dropbox.save({
+                        files: [{
+                            url: pdfUrl,
+                            filename: pdfName
+                        }],
+                        success: function() {
+                            console.log('File saved to Dropbox');
+                        },
+                        progress: function(progress) {
+                            console.log('Upload progress:', progress);
+                        },
+                        cancel: function() {
+                            console.log('Upload cancelled');
+                        },
+                        error: function(error) {
+                            console.error('Dropbox error:', error);
+                        }
+                    });
+                };
+                document.body.appendChild(dropboxScript);
+            }
+
+            // Download the generated PDF
+            function downloadPdf() {
+                if (!currentPdfBytes) return;
+                
+                const blob = new Blob([currentPdfBytes], { type: 'application/pdf' });
+                saveAs(blob, 'scanned-document.pdf');
+            }
+
+            // Share the PDF
+            function sharePdf() {
+                if (!currentPdfBytes) return;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Scanned Document',
+                        text: 'Check out this scanned document',
+                        files: [new File([currentPdfBytes], 'scanned-document.pdf', { type: 'application/pdf' })]
+                    }).catch(error => {
+                        console.error('Error sharing:', error);
+                        alert('Sharing failed. Please download the file instead.');
+                    });
+                } else {
+                    alert('Web Share API not supported in your browser. Please download the file.');
+                }
+            }
+
+            // Reset the scanner
+            function resetScanner() {
+                // Stop camera stream if active
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    stream = null;
+                }
+                
+                // Destroy cropper if active
+                if (cropper) {
+                    cropper.destroy();
+                    cropper = null;
+                }
+                
+                // Reset state
+                capturedImages = [];
+                currentPdfBytes = null;
+                fileInput.value = '';
+                currentImageIndex = 0;
+                currentBatch = 1;
+                totalBatches = 1;
+                
+                // Reset UI
+                scannerContainer.style.display = 'none';
+                uploadArea.style.display = 'block';
+                progressContainer.style.display = 'none';
+                resultContainer.style.display = 'none';
+                cameraFeed.style.display = 'none';
+                scannedPreview.style.display = 'none';
+                cropperContainer.style.display = 'none';
+                imageListContainer.style.display = 'none';
+                imageList.innerHTML = '';
+                noCameraMessage.style.display = isCameraAvailable ? 'none' : 'block';
+                ocrResultsContainer.style.display = 'none';
+                batchIndicator.style.display = 'none';
+                
+                // Reset buttons
+                generatePdfBtn.disabled = true;
+                generatePdfBtn.innerHTML = '<i class="fas fa-file-pdf me-1"></i>Generate PDF';
+                captureBtn.innerHTML = '<i class="fas fa-camera me-1"></i>Capture';
+                retakeBtn.style.display = 'none';
+                cropBtn.style.display = 'none';
+                
+                // Reset adjustments
+                brightness.value = 0;
+                contrast.value = 0;
+                rotation.value = 0;
+                
+                // Reset toggles
+                autoCropToggle.checked = true;
+                ocrToggle.checked = false;
+                batchModeToggle.checked = false;
+                batchMode = false;
+            }
+
+            // Initialize the application
+            init();
+        });
+    </script>
+</body>
+</html>
