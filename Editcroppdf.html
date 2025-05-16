@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop PDF | PDF Toolkit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4285f4;
+            --secondary: #ffffff;
+            --accent: #ea4335;
+            --success: #34a853;
+            --light: #ffffff;
+            --text-dark: #202124;
+            --text-muted: #5f6368;
+            --border: #dadce0;
+        }
+        
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+        }
+        
+        .navbar {
+            background-color: var(--light) !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .navbar-brand {
+            font-weight: 500;
+            color: var(--primary) !important;
+        }
+        
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary) !important;
+        }
+        
+        .tool-card {
+            background: var(--light);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .tool-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.25rem;
+        }
+        
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--light);
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(66, 133, 244, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3367d6;
+            border-color: #3367d6;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: rgba(66, 133, 244, 0.1);
+        }
+        
+        .preview-container {
+            position: relative;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f1f3f4;
+            margin-bottom: 1rem;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preview-canvas {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background-color: white;
+        }
+        
+        .crop-overlay {
+            position: absolute;
+            border: 2px dashed var(--primary);
+            background-color: rgba(66, 133, 244, 0.1);
+            pointer-events: none;
+        }
+        
+        .result-card {
+            background: rgba(52, 168, 83, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .progress-thin {
+            height: 4px;
+            background-color: #f1f3f4;
+        }
+        
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(66, 133, 244, 0.1);
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+        
+        footer {
+            background-color: var(--light) !important;
+            border-top: 1px solid var(--border);
+        }
+        
+        .crop-controls {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        .form-range::-webkit-slider-thumb {
+            background: var(--primary);
+        }
+        
+        .form-range::-moz-range-thumb {
+            background: var(--primary);
+        }
+        
+        .form-range::-ms-thumb {
+            background: var(--primary);
+        }
+        
+        .spinner-border {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-width: 0.2em;
+        }
+        
+        .page-nav {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        /* Ad container styles */
+        .ad-container {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-label {
+            font-size: 0.75rem;
+            color: #5f6368;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .ad-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-file-pdf me-2"></i>PDF Toolkit
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link active" href="#">Tools</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Support</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="tool-card mb-3">
+                    <div class="tool-header">
+                        <h4 class="mb-0"><i class="fas fa-crop me-2"></i>Crop PDF</h4>
+                        <p class="mb-0 opacity-75">Trim margins or remove unwanted areas from your PDF</p>
+                    </div>
+                    <div class="p-3">
+                        <div id="uploadArea" class="upload-zone mb-3">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h5 class="mb-2">Drop your PDF here</h5>
+                            <p class="text-muted mb-3">or click to browse your files</p>
+                            <button class="btn btn-primary px-3" id="browseBtn">
+                                <i class="fas fa-folder-open me-1"></i>Select PDF
+                            </button>
+                            <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                        </div>
+                        
+                        <div id="editorContainer" style="display: none;">
+                            <div class="page-nav mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span id="currentPage">Page 1</span>
+                                        <span class="text-muted ms-2" id="totalPages">of 1</span>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-outline-primary btn-sm" id="prevPageBtn" disabled>
+                                            <i class="fas fa-chevron-left"></i>
+                                        </button>
+                                        <button class="btn btn-outline-primary btn-sm" id="nextPageBtn" disabled>
+                                            <i class="fas fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="preview-container mb-3" id="previewContainer">
+                                <!-- Canvas will be inserted here -->
+                                <div id="cropOverlay" class="crop-overlay" style="display: none;"></div>
+                            </div>
+                            
+                            <div class="crop-controls mb-3">
+                                <h6 class="mb-3"><i class="fas fa-crop-alt me-2"></i>Crop Margins</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="leftMargin" class="form-label small">Left Margin</label>
+                                        <input type="range" class="form-range" id="leftMargin" min="0" max="100" value="0">
+                                        <div class="d-flex justify-content-between">
+                                            <small>0%</small>
+                                            <small id="leftValue">0%</small>
+                                            <small>100%</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="rightMargin" class="form-label small">Right Margin</label>
+                                        <input type="range" class="form-range" id="rightMargin" min="0" max="100" value="0">
+                                        <div class="d-flex justify-content-between">
+                                            <small>0%</small>
+                                            <small id="rightValue">0%</small>
+                                            <small>100%</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="topMargin" class="form-label small">Top Margin</label>
+                                        <input type="range" class="form-range" id="topMargin" min="0" max="100" value="0">
+                                        <div class="d-flex justify-content-between">
+                                            <small>0%</small>
+                                            <small id="topValue">0%</small>
+                                            <small>100%</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="bottomMargin" class="form-label small">Bottom Margin</label>
+                                        <input type="range" class="form-range" id="bottomMargin" min="0" max="100" value="0">
+                                        <div class="d-flex justify-content-between">
+                                            <small>0%</small>
+                                            <small id="bottomValue">0%</small>
+                                            <small>100%</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 mt-3">
+                                    <button class="btn btn-outline-primary btn-sm" id="resetCropBtn">
+                                        <i class="fas fa-undo me-1"></i>Reset
+                                    </button>
+                                    <button class="btn btn-primary btn-sm ms-auto" id="applyAllBtn">
+                                        <i class="fas fa-clone me-1"></i>Apply to All Pages
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-2 justify-content-between">
+                                <button class="btn btn-outline-primary" id="resetBtn">
+                                    <i class="fas fa-redo me-1"></i>Start Over
+                                </button>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary" id="savePdfBtn">
+                                        <i class="fas fa-save me-1"></i>Save PDF
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div id="progressContainer" class="mt-3" style="display: none;">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small id="progressText">Processing...</small>
+                                    <small id="progressPercent">0%</small>
+                                </div>
+                                <div class="progress progress-thin">
+                                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <div id="resultContainer" class="result-card p-3 mt-3" style="display: none;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>PDF Cropped</h5>
+                                        <p class="text-muted mb-0" id="pageCount">1 page processed</p>
+                                    </div>
+                                    <span class="badge bg-success">Ready</span>
+                                </div>
+                                
+                                <div class="d-flex flex-wrap gap-2 justify-content-end mt-2">
+                                    <button id="downloadBtn" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-file-pdf me-1"></i>Download
+                                    </button>
+                                    <button id="newEditBtn" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-redo me-1"></i>New PDF
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-ruler-horizontal"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Precise Cropping</h6>
+                            <p class="text-muted small text-center">Adjust margins with pixel-perfect precision</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-clone"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Batch Apply</h6>
+                            <p class="text-muted small text-center">Apply same crop to all pages</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Live Preview</h6>
+                            <p class="text-muted small text-center">See changes in real-time</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Ad Container -->
+                <div class="ad-container mb-4">
+                    <div class="ad-label">Advertisement</div>
+                    <div class="ad-placeholder">
+                        <div>Ad Space (300x250)</div>
+                    </div>
+                </div>
+                
+                <div class="p-3 mb-3 bg-white rounded border">
+                    <h5 class="mb-2"><i class="fas fa-tools me-2"></i>Other Tools</h5>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-primary">
+                                    <i class="fas fa-object-group"></i>
+                                </div>
+                                <div>PDF Merger</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-success">
+                                    <i class="fas fa-cut"></i>
+                                </div>
+                                <div>PDF Splitter</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-warning">
+                                    <i class="fas fa-compress-alt"></i>
+                                </div>
+                                <div>Compress PDF</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="p-3 bg-white rounded border">
+                    <h5 class="mb-2"><i class="fas fa-lightbulb me-2"></i>Cropping Tips</h5>
+                    <ul class="small text-muted">
+                        <li class="mb-2">Use the sliders to adjust margins from all sides</li>
+                        <li class="mb-2">Preview changes before saving</li>
+                        <li class="mb-2">"Apply to All" makes consistent changes</li>
+                        <li class="mb-2">Reset individual pages if needed</li>
+                        <li>Download retains original quality</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-3 mt-4 bg-white border-top">
+        <div class="container text-center">
+            <p class="text-muted small mb-0">&copy; 2023 PDF Toolkit. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.min.js"></script>
+    <script>
+        // Set PDF.js worker path
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const browseBtn = document.getElementById('browseBtn');
+            const editorContainer = document.getElementById('editorContainer');
+            const previewContainer = document.getElementById('previewContainer');
+            const currentPageSpan = document.getElementById('currentPage');
+            const totalPagesSpan = document.getElementById('totalPages');
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            const leftMargin = document.getElementById('leftMargin');
+            const rightMargin = document.getElementById('rightMargin');
+            const topMargin = document.getElementById('topMargin');
+            const bottomMargin = document.getElementById('bottomMargin');
+            const leftValue = document.getElementById('leftValue');
+            const rightValue = document.getElementById('rightValue');
+            const topValue = document.getElementById('topValue');
+            const bottomValue = document.getElementById('bottomValue');
+            const resetCropBtn = document.getElementById('resetCropBtn');
+            const applyAllBtn = document.getElementById('applyAllBtn');
+            const savePdfBtn = document.getElementById('savePdfBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressText = document.getElementById('progressText');
+            const resultContainer = document.getElementById('resultContainer');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const newEditBtn = document.getElementById('newEditBtn');
+            const pageCount = document.getElementById('pageCount');
+            const cropOverlay = document.getElementById('cropOverlay');
+
+            // State variables
+            let pdfDoc = null;
+            let currentPdfBytes = null;
+            let totalPages = 0;
+            let currentPage = 1;
+            let pageDimensions = [];
+            let cropSettings = [];
+            let currentPdf = null;
+            let currentCanvas = null;
+
+            // Initialize PDF.js and set up event listeners
+            function init() {
+                // File input change handler
+                fileInput.addEventListener('change', handleFileSelect);
+                browseBtn.addEventListener('click', () => fileInput.click());
+                uploadArea.addEventListener('click', () => fileInput.click());
+                
+                // Handle drag and drop
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = 'var(--primary)';
+                    uploadArea.style.backgroundColor = 'rgba(66, 133, 244, 0.05)';
+                });
+                
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.style.borderColor = 'var(--border)';
+                    uploadArea.style.backgroundColor = 'var(--light)';
+                });
+                
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.style.borderColor = 'var(--border)';
+                    uploadArea.style.backgroundColor = 'var(--light)';
+                    
+                    if (e.dataTransfer.files.length) {
+                        fileInput.files = e.dataTransfer.files;
+                        handleFileSelect({ target: fileInput });
+                    }
+                });
+
+                // Page navigation
+                prevPageBtn.addEventListener('click', () => navigatePage(-1));
+                nextPageBtn.addEventListener('click', () => navigatePage(1));
+
+                // Crop controls
+                [leftMargin, rightMargin, topMargin, bottomMargin].forEach(slider => {
+                    slider.addEventListener('input', updateCropOverlay);
+                });
+
+                resetCropBtn.addEventListener('click', resetCurrentCrop);
+                applyAllBtn.addEventListener('click', applyCropToAllPages);
+                savePdfBtn.addEventListener('click', saveCroppedPdf);
+                resetBtn.addEventListener('click', confirmReset);
+                downloadBtn.addEventListener('click', downloadPdf);
+                newEditBtn.addEventListener('click', resetEditor);
+
+                // Initialize crop settings array
+                resetCropSettings();
+            }
+
+            // Handle file selection
+            async function handleFileSelect(event) {
+                const file = fileInput.files[0];
+                if (!file) {
+                    alert('Please select a PDF file');
+                    return;
+                }
+                
+                // Check if the file is a PDF
+                if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                    alert('Please select a valid PDF file');
+                    return;
+                }
+                
+                try {
+                    // Show loading state
+                    browseBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Loading...';
+                    browseBtn.disabled = true;
+                    
+                    // Read the file as ArrayBuffer
+                    const arrayBuffer = await readFileAsArrayBuffer(file);
+                    currentPdfBytes = new Uint8Array(arrayBuffer);
+                    
+                    // Load with PDF.js for preview
+                    currentPdf = await pdfjsLib.getDocument({data: currentPdfBytes}).promise;
+                    totalPages = currentPdf.numPages;
+                    pageDimensions = [];
+                    cropSettings = [];
+                    
+                    // Initialize crop settings for each page
+                    for (let i = 0; i < totalPages; i++) {
+                        cropSettings.push({
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            bottom: 0
+                        });
+                    }
+                    
+                    // Load first page
+                    await loadPage(1);
+                    
+                    // Update UI
+                    totalPagesSpan.textContent = `of ${totalPages}`;
+                    if (totalPages > 1) {
+                        nextPageBtn.disabled = false;
+                    }
+                    
+                    // Show editor
+                    uploadArea.style.display = 'none';
+                    editorContainer.style.display = 'block';
+                    
+                } catch (error) {
+                    console.error('Error loading PDF:', error);
+                    alert('Error loading PDF. Please try another file.');
+                } finally {
+                    // Reset button state
+                    browseBtn.innerHTML = '<i class="fas fa-folder-open me-1"></i>Select PDF';
+                    browseBtn.disabled = false;
+                }
+            }
+
+            // Helper function to read file as ArrayBuffer
+            function readFileAsArrayBuffer(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsArrayBuffer(file);
+                });
+            }
+
+            // Load a specific page for preview
+            async function loadPage(pageNum) {
+                if (!currentPdf || pageNum < 1 || pageNum > totalPages) return;
+                
+                try {
+                    currentPage = pageNum;
+                    currentPageSpan.textContent = `Page ${pageNum}`;
+                    
+                    // Update navigation buttons
+                    prevPageBtn.disabled = pageNum <= 1;
+                    nextPageBtn.disabled = pageNum >= totalPages;
+                    
+                    // Get page from PDF
+                    const page = await currentPdf.getPage(pageNum);
+                    const viewport = page.getViewport({ scale: 1.0 });
+                    
+                    // Store dimensions if not already stored
+                    if (!pageDimensions[pageNum - 1]) {
+                        pageDimensions[pageNum - 1] = {
+                            width: viewport.width,
+                            height: viewport.height,
+                            viewport: viewport
+                        };
+                    }
+                    
+                    // Clear previous preview
+                    while (previewContainer.firstChild) {
+                        if (previewContainer.firstChild !== cropOverlay) {
+                            previewContainer.removeChild(previewContainer.firstChild);
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    // Create canvas for rendering
+                    currentCanvas = document.createElement('canvas');
+                    const context = currentCanvas.getContext('2d');
+                    currentCanvas.className = 'preview-canvas';
+                    previewContainer.appendChild(currentCanvas);
+                    
+                    // Adjust scale to fit container
+                    const containerWidth = previewContainer.clientWidth - 40; // Account for padding
+                    const containerHeight = previewContainer.clientHeight - 40;
+                    
+                    const scale = Math.min(
+                        containerWidth / viewport.width,
+                        containerHeight / viewport.height
+                    );
+                    
+                    const scaledViewport = page.getViewport({ scale });
+                    
+                    // Set canvas dimensions
+                    currentCanvas.height = scaledViewport.height;
+                    currentCanvas.width = scaledViewport.width;
+                    
+                    // Render PDF page to canvas
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: scaledViewport
+                    };
+                    
+                    await page.render(renderContext).promise;
+                    
+                    // Add crop overlay
+                    previewContainer.appendChild(cropOverlay);
+                    
+                    // Update crop controls with current page settings
+                    const settings = cropSettings[pageNum - 1];
+                    leftMargin.value = settings.left;
+                    rightMargin.value = settings.right;
+                    topMargin.value = settings.top;
+                    bottomMargin.value = settings.bottom;
+                    
+                    leftValue.textContent = `${settings.left}%`;
+                    rightValue.textContent = `${settings.right}%`;
+                    topValue.textContent = `${settings.top}%`;
+                    bottomValue.textContent = `${settings.bottom}%`;
+                    
+                    // Update crop overlay
+                    updateCropOverlay();
+                    
+                } catch (error) {
+                    console.error('Error loading page:', error);
+                    alert('Error loading page. Please try again.');
+                }
+            }
+
+            // Update crop overlay based on current settings
+            function updateCropOverlay() {
+                if (!currentCanvas) return;
+                
+                // Get current crop values
+                const left = parseInt(leftMargin.value);
+                const right = parseInt(rightMargin.value);
+                const top = parseInt(topMargin.value);
+                const bottom = parseInt(bottomMargin.value);
+                
+                // Update display values
+                leftValue.textContent = `${left}%`;
+                rightValue.textContent = `${right}%`;
+                topValue.textContent = `${top}%`;
+                bottomValue.textContent = `${bottom}%`;
+                
+                // Save current settings
+                cropSettings[currentPage - 1] = { left, right, top, bottom };
+                
+                // Calculate crop overlay dimensions
+                const canvasRect = currentCanvas.getBoundingClientRect();
+                const containerRect = previewContainer.getBoundingClientRect();
+                
+                const imgWidth = canvasRect.width;
+                const imgHeight = canvasRect.height;
+                const imgOffsetX = canvasRect.left - containerRect.left;
+                const imgOffsetY = canvasRect.top - containerRect.top;
+                
+                const cropLeft = (left / 100) * imgWidth;
+                const cropRight = (right / 100) * imgWidth;
+                const cropTop = (top / 100) * imgHeight;
+                const cropBottom = (bottom / 100) * imgHeight;
+                
+                // Position and size the overlay
+                cropOverlay.style.display = 'block';
+                cropOverlay.style.left = `${imgOffsetX + cropLeft}px`;
+                cropOverlay.style.top = `${imgOffsetY + cropTop}px`;
+                cropOverlay.style.width = `${imgWidth - cropLeft - cropRight}px`;
+                cropOverlay.style.height = `${imgHeight - cropTop - cropBottom}px`;
+            }
+
+            // Navigate between pages
+            function navigatePage(delta) {
+                const newPage = currentPage + delta;
+                if (newPage >= 1 && newPage <= totalPages) {
+                    loadPage(newPage);
+                }
+            }
+
+            // Reset crop for current page
+            function resetCurrentCrop() {
+                leftMargin.value = 0;
+                rightMargin.value = 0;
+                topMargin.value = 0;
+                bottomMargin.value = 0;
+                updateCropOverlay();
+            }
+
+            // Apply current crop settings to all pages
+            function applyCropToAllPages() {
+                if (!confirm('Apply these crop settings to all pages?')) return;
+                
+                const currentSettings = cropSettings[currentPage - 1];
+                for (let i = 0; i < totalPages; i++) {
+                    cropSettings[i] = { ...currentSettings };
+                }
+                
+                alert(`Applied crop settings to all ${totalPages} pages.`);
+            }
+
+            // Save the cropped PDF
+            async function saveCroppedPdf() {
+                if (!currentPdfBytes) return;
+                
+                try {
+                    // Show progress
+                    progressContainer.style.display = 'block';
+                    resultContainer.style.display = 'none';
+                    savePdfBtn.disabled = true;
+                    savePdfBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Processing...';
+                    
+                    // Load the original PDF with pdf-lib
+                    const pdfDoc = await PDFLib.PDFDocument.load(currentPdfBytes);
+                    const pages = pdfDoc.getPages();
+                    
+                    // Track progress
+                    let processed = 0;
+                    const total = pages.length;
+                    
+                    // Update progress function
+                    const updateProgress = () => {
+                        processed++;
+                        const percent = Math.round((processed / total) * 100);
+                        progressBar.style.width = `${percent}%`;
+                        progressPercent.textContent = `${percent}%`;
+                        
+                        if (processed === total) {
+                            progressText.textContent = 'Finalizing document...';
+                        }
+                    };
+                    
+                    // Process each page
+                    for (let i = 0; i < pages.length; i++) {
+                        const page = pages[i];
+                        const { width, height } = page.getSize();
+                        const settings = cropSettings[i];
+                        
+                        // Calculate crop box (in PDF coordinates)
+                        const left = (settings.left / 100) * width;
+                        const right = (settings.right / 100) * width;
+                        const top = (settings.top / 100) * height;
+                        const bottom = (settings.bottom / 100) * height;
+                        
+                        // Set new crop box
+                        page.setCropBox(
+                            left,
+                            height - top,
+                            width - right,
+                            bottom
+                        );
+                        
+                        updateProgress();
+                    }
+                    
+                    // Save the cropped PDF
+                    const croppedPdfBytes = await pdfDoc.save();
+                    currentPdfBytes = croppedPdfBytes;
+                    
+                    // Show result
+                    progressContainer.style.display = 'none';
+                    resultContainer.style.display = 'block';
+                    pageCount.textContent = `${totalPages} page${totalPages !== 1 ? 's' : ''} processed`;
+                    
+                } catch (error) {
+                    console.error('Error cropping PDF:', error);
+                    alert('Error cropping PDF. Please try again.');
+                } finally {
+                    // Reset button state
+                    savePdfBtn.disabled = false;
+                    savePdfBtn.innerHTML = '<i class="fas fa-save me-1"></i>Save PDF';
+                }
+            }
+
+            // Download the cropped PDF
+            function downloadPdf() {
+                if (!currentPdfBytes) return;
+                
+                const blob = new Blob([currentPdfBytes], { type: 'application/pdf' });
+                saveAs(blob, 'cropped-document.pdf');
+            }
+
+            // Confirm reset
+            function confirmReset() {
+                if (confirm('Are you sure you want to reset? All changes will be lost.')) {
+                    resetEditor();
+                }
+            }
+
+            // Reset editor
+            function resetEditor() {
+                // Reset state
+                pdfDoc = null;
+                currentPdf = null;
+                currentPdfBytes = null;
+                totalPages = 0;
+                currentPage = 1;
+                pageDimensions = [];
+                resetCropSettings();
+                currentCanvas = null;
+                
+                // Reset UI
+                editorContainer.style.display = 'none';
+                uploadArea.style.display = 'block';
+                progressContainer.style.display = 'none';
+                resultContainer.style.display = 'none';
+                while (previewContainer.firstChild) {
+                    previewContainer.removeChild(previewContainer.firstChild);
+                }
+                fileInput.value = '';
+                
+                // Reset buttons
+                savePdfBtn.disabled = false;
+                savePdfBtn.innerHTML = '<i class="fas fa-save me-1"></i>Save PDF';
+                prevPageBtn.disabled = true;
+                nextPageBtn.disabled = true;
+            }
+
+            // Reset crop settings
+            function resetCropSettings() {
+                cropSettings = Array(totalPages).fill().map(() => ({
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0
+                }));
+            }
+
+            // Initialize the application
+            init();
+        });
+    </script>
+</body>
+</html>
