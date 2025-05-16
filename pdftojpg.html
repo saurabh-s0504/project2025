@@ -202,7 +202,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-file-pdf me-2"></i>PDF Toolkit
+                <i class="fas fa-file-pdf me-2"></i>PDF-MAFIA
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -210,17 +210,19 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item mx-2">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="index.html">Home</a>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="nav-link active" href="#">Tools</a>
+                        <a class="nav-link active" href="index.html">Tools</a>
                     </li>
+                    <!--
                     <li class="nav-item mx-2">
                         <a class="nav-link" href="#">Pricing</a>
                     </li>
                     <li class="nav-item mx-2">
                         <a class="nav-link" href="#">Support</a>
                     </li>
+                    -->
                 </ul>
             </div>
         </div>
@@ -374,11 +376,11 @@
                 </div>
                 
                 <!-- Other Tools -->
-                <div class="tool-card p-4 mb-4">
+                <div class="tool-card p-4 mb-4" >
                     <h5 class="mb-3"><i class="fas fa-tools me-2"></i>Other Tools</h5>
                     <div class="list-group list-group-flush">
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center" onclick="openPage('pdfmerger.html')">
                                 <div class="me-3 text-primary">
                                     <i class="fas fa-object-group"></i>
                                 </div>
@@ -386,28 +388,28 @@
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center" onclick="openPage('pdfcompress.html')">
                                 <div class="me-3 text-success">
                                     <i class="fas fa-compress-alt"></i>
                                 </div>
                                 <div>PDF Compressor</div>
                             </div>
                         </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3 text-warning">
-                                    <i class="fas fa-lock"></i>
+                       <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center" onclick="openPage('pdfsplitter.html')">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-cut"></i>
                                 </div>
-                                <div>Protect PDF</div>
+                                <div>PDF Splitter</div>
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3 text-danger">
-                                    <i class="fas fa-edit"></i>
-                                </div>
-                                <div>Edit PDF</div>
-                            </div>
+                            <div class="d-flex align-items-center" onclick="openPage('numberingpdf.html')">
+                               <div class="me-3 text-primary">
+                                  <i class="fas fa-list-ol"></i>
+                              </div>
+                              <div>Numbering of PDF</div>
+                             </div>
                         </a>
                     </div>
                 </div>
@@ -438,9 +440,11 @@
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#" class="text-white-50">Home</a></li>
                         <li class="mb-2"><a href="#" class="text-white-50">Tools</a></li>
+                        <!--
                         <li class="mb-2"><a href="#" class="text-white-50">Pricing</a></li>
                         <li><a href="#" class="text-white-50">Contact</a></li>
                     </ul>
+                    -->
                 </div>
                 <div class="col-md-4">
                     <h6 class="mb-3">Connect</h6>
@@ -832,6 +836,10 @@
             // Start the app
             init();
         });
+
+          function openPage(page) {
+    window.location.href = page; // This redirects to the specified HTML page
+  }
     </script>
 </body>
 </html>
