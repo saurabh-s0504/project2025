@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,47 +18,48 @@
             --text-muted: #5f6368;
             --border: #dadce0;
         }
-        
+
         body {
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #f8f9fa;
             color: var(--text-dark);
         }
-        
+
         .navbar {
             background-color: var(--light) !important;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             border-bottom: 1px solid var(--border);
         }
-        
+
         .navbar-brand {
             font-weight: 500;
             color: var(--primary) !important;
         }
-        
+
         .nav-link {
             color: var(--text-dark) !important;
             font-weight: 500;
         }
-        
-        .nav-link:hover, .nav-link.active {
+
+        .nav-link:hover,
+        .nav-link.active {
             color: var(--primary) !important;
         }
-        
+
         .tool-card {
             background: var(--light);
             border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--border);
             overflow: hidden;
         }
-        
+
         .tool-header {
             background: var(--primary);
             color: white;
             padding: 1.25rem;
         }
-        
+
         .upload-zone {
             border: 2px dashed var(--border);
             border-radius: 8px;
@@ -67,39 +69,39 @@
             transition: all 0.2s ease;
             background: var(--light);
         }
-        
+
         .upload-zone:hover {
             border-color: var(--primary);
             background: rgba(66, 133, 244, 0.05);
         }
-        
+
         .upload-icon {
             font-size: 3rem;
             color: var(--primary);
             margin-bottom: 1rem;
         }
-        
+
         .btn-primary {
             background-color: var(--primary);
             border-color: var(--primary);
             font-weight: 500;
             padding: 0.5rem 1.25rem;
         }
-        
+
         .btn-primary:hover {
             background-color: #3367d6;
             border-color: #3367d6;
         }
-        
+
         .btn-outline-primary {
             color: var(--primary);
             border-color: var(--primary);
         }
-        
+
         .btn-outline-primary:hover {
             background-color: rgba(66, 133, 244, 0.1);
         }
-        
+
         .preview-container {
             position: relative;
             border: 1px solid var(--border);
@@ -112,24 +114,24 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .pdf-viewer {
             width: 100%;
             height: 100%;
             border: none;
         }
-        
+
         .result-card {
             background: rgba(52, 168, 83, 0.1);
             border-radius: 8px;
             border-left: 4px solid var(--success);
         }
-        
+
         .progress-thin {
             height: 4px;
             background-color: #f1f3f4;
         }
-        
+
         .tool-icon {
             width: 40px;
             height: 40px;
@@ -142,21 +144,26 @@
             font-size: 1.25rem;
             margin-bottom: 0.75rem;
         }
-        
-        h1, h2, h3, h4, h5, h6 {
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             color: var(--text-dark);
             font-weight: 500;
         }
-        
+
         .text-muted {
             color: var(--text-muted) !important;
         }
-        
+
         footer {
             background-color: var(--light) !important;
             border-top: 1px solid var(--border);
         }
-        
+
         .search-controls {
             background: var(--light);
             border-radius: 8px;
@@ -164,13 +171,13 @@
             margin-bottom: 1rem;
             border: 1px solid var(--border);
         }
-        
+
         .spinner-border {
             width: 1.5rem;
             height: 1.5rem;
             border-width: 0.2em;
         }
-        
+
         .search-results {
             max-height: 300px;
             overflow-y: auto;
@@ -180,35 +187,35 @@
             padding: 1rem;
             background-color: white;
         }
-        
+
         .search-result-item {
             padding: 0.5rem;
             border-bottom: 1px solid var(--border);
             cursor: pointer;
         }
-        
+
         .search-result-item:hover {
             background-color: rgba(66, 133, 244, 0.05);
         }
-        
+
         .search-result-item.active {
             background-color: rgba(66, 133, 244, 0.1);
             border-left: 3px solid var(--primary);
         }
-        
+
         .search-highlight {
             background-color: rgba(255, 255, 0, 0.5);
             padding: 0 2px;
             border-radius: 2px;
         }
-        
+
         .page-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-        
+
         .ad-container {
             background-color: #f8f9fa;
             border: 1px solid #e0e0e0;
@@ -222,7 +229,7 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .ad-label {
             font-size: 0.75rem;
             color: #5f6368;
@@ -230,7 +237,7 @@
             margin-bottom: 10px;
             letter-spacing: 1px;
         }
-        
+
         .ad-placeholder {
             width: 100%;
             height: 200px;
@@ -241,13 +248,13 @@
             color: #6c757d;
             border-radius: 4px;
         }
-        
+
         .error-message {
             color: var(--accent);
             margin-top: 1rem;
             text-align: center;
         }
-        
+
         .text-match-count {
             font-size: 0.8rem;
             color: var(--text-muted);
@@ -255,11 +262,12 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-file-pdf me-2"></i>PDF Toolkit Pro
+                <i class="fas fa-file-pdf me-2"></i>PDF-MAFIA
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -272,12 +280,14 @@
                     <li class="nav-item mx-2">
                         <a class="nav-link active" href="#">Tools</a>
                     </li>
+                    <!--
                     <li class="nav-item mx-2">
                         <a class="nav-link" href="#">Pricing</a>
                     </li>
                     <li class="nav-item mx-2">
                         <a class="nav-link" href="#">Support</a>
                     </li>
+                    -->
                 </ul>
             </div>
         </div>
@@ -288,7 +298,7 @@
             <div class="col-lg-8">
                 <div class="tool-card mb-3">
                     <div class="tool-header">
-                        <h4 class="mb-0"><i class="fas fa-search me-2"></i>PDF Search</h4>
+                        <h4 class="mb-0"><i class="fas fa-search me-2"></i>Text Search</h4>
                         <p class="mb-0 opacity-75">Search text within PDF documents</p>
                     </div>
                     <div class="p-3">
@@ -304,11 +314,12 @@
                             <input type="file" id="fileInput" accept=".pdf" style="display: none;">
                             <div id="fileError" class="error-message" style="display: none;"></div>
                         </div>
-                        
+
                         <div id="searchContainer" style="display: none;">
                             <div class="search-controls mb-3">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="searchInput" placeholder="Enter text to search..." autocomplete="off">
+                                    <input type="text" class="form-control" id="searchInput"
+                                        placeholder="Enter text to search..." autocomplete="off">
                                     <button class="btn btn-primary" id="searchBtn">
                                         <i class="fas fa-search me-1"></i>Search
                                     </button>
@@ -319,19 +330,22 @@
                                 <div class="d-flex align-items-center mt-2">
                                     <div class="form-check me-3">
                                         <input class="form-check-input" type="checkbox" id="caseSensitiveCheck">
-                                        <label class="form-check-label small" for="caseSensitiveCheck">Case sensitive</label>
+                                        <label class="form-check-label small" for="caseSensitiveCheck">Case
+                                            sensitive</label>
                                     </div>
                                     <div class="form-check me-3">
                                         <input class="form-check-input" type="checkbox" id="wholeWordCheck">
-                                        <label class="form-check-label small" for="wholeWordCheck">Whole words only</label>
+                                        <label class="form-check-label small" for="wholeWordCheck">Whole words
+                                            only</label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="highlightAllCheck" checked>
-                                        <label class="form-check-label small" for="highlightAllCheck">Highlight all</label>
+                                        <label class="form-check-label small" for="highlightAllCheck">Highlight
+                                            all</label>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="preview-container mb-3" id="previewContainer">
                                 <iframe id="pdfViewer" class="pdf-viewer" style="display: none;"></iframe>
                                 <div id="noPdfMessage" class="text-center text-muted">
@@ -339,14 +353,15 @@
                                     <p>PDF will appear here after upload</p>
                                 </div>
                             </div>
-                            
+
                             <div id="searchResultsContainer" style="display: none;">
-                                <h6 class="mb-2"><i class="fas fa-list me-2"></i>Search Results <span id="matchCount" class="text-match-count">0 matches</span></h6>
+                                <h6 class="mb-2"><i class="fas fa-list me-2"></i>Search Results <span id="matchCount"
+                                        class="text-match-count">0 matches</span></h6>
                                 <div class="search-results" id="searchResults">
                                     <!-- Search results will be inserted here -->
                                 </div>
                             </div>
-                            
+
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex gap-2">
                                     <button class="btn btn-outline-primary" id="prevMatchBtn" disabled>
@@ -363,7 +378,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row g-3 mb-3">
                     <div class="col-md-3">
                         <div class="p-3 h-100 bg-white rounded border">
@@ -403,7 +418,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-lg-4">
                 <!-- Ad Container -->
                 <div class="ad-container mb-4">
@@ -412,45 +427,45 @@
                         <div>Ad Space (300x250)</div>
                     </div>
                 </div>
-                
+
                 <div class="p-3 mb-3 bg-white rounded border">
                     <h5 class="mb-2"><i class="fas fa-tools me-2"></i>Other Tools</h5>
                     <div class="list-group list-group-flush">
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-2 text-primary">
-                                    <i class="fas fa-camera"></i>
+                            <div class="d-flex align-items-center" onclick="openPage('pdfmerger.html')">
+                                <div class="me-3 text-success">
+                                    <i class="fas fa-object-group"></i>
                                 </div>
-                                <div>PDF Scanner</div>
+                                <div>PDF Merger</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center" onclick="openPage('jpgtopdf.html')">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-file-image"></i> <!-- Image file icon -->
+                                </div>
+                                <div>JPG to PDF</div>
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
                             <div class="d-flex align-items-center">
-                                <div class="me-2 text-success">
-                                    <i class="fas fa-share-alt"></i>
-                                </div>
-                                <div>Share PDF</div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-2 text-warning">
+                                <div class="me-3 text-primary">
                                     <i class="fas fa-compress-alt"></i>
                                 </div>
-                                <div>Compress PDF</div>
+                                <div>PDF Compressor</div>
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-2 text-danger">
-                                    <i class="fas fa-font"></i>
+                            <div class="d-flex align-items-center" onclick="openPage('deletepdfpages.html')">
+                                <div class="me-3 text-primary">
+                                    <i class="fas fa-trash-alt"></i> <!-- Delete/trash icon -->
                                 </div>
-                                <div>OCR PDF</div>
+                                <div>Delete PDF Pages</div>
                             </div>
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="p-3 bg-white rounded border">
                     <h5 class="mb-2"><i class="fas fa-lightbulb me-2"></i>Search Tips</h5>
                     <ul class="small text-muted">
@@ -467,7 +482,7 @@
 
     <footer class="py-3 mt-4 bg-white border-top">
         <div class="container text-center">
-            <p class="text-muted small mb-0">&copy; 2023 PDF Toolkit Pro. All rights reserved.</p>
+            <p class="text-muted small mb-0">&copy; 2025 PDF-MAFIA. All rights reserved.</p>
         </div>
     </footer>
 
@@ -478,7 +493,7 @@
         // Set PDF.js worker path
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js';
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // DOM Elements
             const uploadArea = document.getElementById('uploadArea');
             const uploadPdfBtn = document.getElementById('uploadPdfBtn');
@@ -566,24 +581,24 @@
             function processPdfFile(file) {
                 const fileReader = new FileReader();
 
-                fileReader.onload = function() {
+                fileReader.onload = function () {
                     const typedArray = new Uint8Array(this.result);
 
                     // Load the PDF document
-                    pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
+                    pdfjsLib.getDocument(typedArray).promise.then(function (pdf) {
                         pdfDoc = pdf;
-                        
+
                         // Display PDF in viewer
                         displayPdf(typedArray);
-                        
+
                         // Extract text from all pages
                         extractAllText(pdf);
-                        
+
                         // Show search interface
                         uploadArea.style.display = 'none';
                         searchContainer.style.display = 'block';
-                        
-                    }).catch(function(error) {
+
+                    }).catch(function (error) {
                         console.error('PDF loading error:', error);
                         fileError.textContent = 'Error loading PDF. Please try another file.';
                         fileError.style.display = 'block';
@@ -592,7 +607,7 @@
                     });
                 };
 
-                fileReader.onerror = function() {
+                fileReader.onerror = function () {
                     fileError.textContent = 'Error reading file. Please try again.';
                     fileError.style.display = 'block';
                     uploadPdfBtn.innerHTML = '<i class="fas fa-upload me-1"></i>Select PDF';
@@ -616,26 +631,26 @@
                 pdfTextContent = [];
                 const numPages = pdf.numPages;
                 let pagesProcessed = 0;
-                
+
                 // Extract text from each page
                 for (let i = 1; i <= numPages; i++) {
-                    pdf.getPage(i).then(function(page) {
+                    pdf.getPage(i).then(function (page) {
                         return page.getTextContent();
-                    }).then(function(textContent) {
+                    }).then(function (textContent) {
                         const pageText = textContent.items.map(item => item.str).join(' ');
                         pdfTextContent.push({
                             page: pagesProcessed + 1,
                             text: pageText
                         });
-                        
+
                         pagesProcessed++;
-                        
+
                         // When all pages are processed
                         if (pagesProcessed === numPages) {
                             uploadPdfBtn.innerHTML = '<i class="fas fa-upload me-1"></i>Select PDF';
                             uploadPdfBtn.disabled = false;
                         }
-                    }).catch(function(error) {
+                    }).catch(function (error) {
                         console.error('Text extraction error:', error);
                         pagesProcessed++;
                     });
@@ -645,37 +660,37 @@
             // Perform search
             function performSearch() {
                 searchTerm = searchInput.value.trim();
-                
+
                 if (!searchTerm) {
                     fileError.textContent = 'Please enter a search term';
                     fileError.style.display = 'block';
                     return;
                 }
-                
+
                 if (!pdfDoc || pdfTextContent.length === 0) {
                     fileError.textContent = 'PDF not fully loaded yet';
                     fileError.style.display = 'block';
                     return;
                 }
-                
+
                 fileError.style.display = 'none';
                 searchResults.innerHTML = '';
                 searchMatches = [];
                 currentMatchIndex = -1;
-                
+
                 // Show loading state
                 searchBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Searching...';
                 searchBtn.disabled = true;
-                
+
                 // Create search regex
                 let regexPattern = searchTerm;
                 if (isWholeWord) {
                     regexPattern = `\\b${regexPattern}\\b`;
                 }
-                
+
                 const regexFlags = isCaseSensitive ? 'g' : 'gi';
                 let searchRegex;
-                
+
                 try {
                     searchRegex = new RegExp(regexPattern, regexFlags);
                 } catch (e) {
@@ -685,13 +700,13 @@
                     searchBtn.disabled = false;
                     return;
                 }
-                
+
                 // Search through each page's text
                 pdfTextContent.forEach((pageContent, pageIndex) => {
                     const pageText = pageContent.text;
                     const pageNumber = pageContent.page;
                     let match;
-                    
+
                     while ((match = searchRegex.exec(pageText)) !== null) {
                         searchMatches.push({
                             page: pageNumber,
@@ -702,21 +717,21 @@
                         });
                     }
                 });
-                
+
                 // Update UI with results
                 updateSearchResults();
-                
+
                 // Enable/disable navigation buttons
                 prevMatchBtn.disabled = searchMatches.length === 0;
                 nextMatchBtn.disabled = searchMatches.length === 0;
-                
+
                 // Reset search button
                 searchBtn.innerHTML = '<i class="fas fa-search me-1"></i>Search';
                 searchBtn.disabled = false;
-                
+
                 // Show results container
                 searchResultsContainer.style.display = 'block';
-                
+
                 // If matches found, go to first match
                 if (searchMatches.length > 0) {
                     currentMatchIndex = 0;
@@ -728,12 +743,12 @@
             function updateSearchResults() {
                 searchResults.innerHTML = '';
                 matchCount.textContent = `${searchMatches.length} ${searchMatches.length === 1 ? 'match' : 'matches'}`;
-                
+
                 if (searchMatches.length === 0) {
                     searchResults.innerHTML = '<div class="text-muted">No matches found</div>';
                     return;
                 }
-                
+
                 // Group matches by page
                 const matchesByPage = {};
                 searchMatches.forEach((match, index) => {
@@ -745,27 +760,27 @@
                         globalIndex: index
                     });
                 });
-                
+
                 // Create result items
                 for (const page in matchesByPage) {
                     const pageHeader = document.createElement('div');
                     pageHeader.className = 'fw-bold small mt-2 mb-1';
                     pageHeader.textContent = `Page ${page}`;
                     searchResults.appendChild(pageHeader);
-                    
+
                     matchesByPage[page].forEach(match => {
                         const resultItem = document.createElement('div');
                         resultItem.className = `search-result-item ${match.globalIndex === currentMatchIndex ? 'active' : ''}`;
                         resultItem.innerHTML = `
                             <div class="small text-muted">...${match.before}<span class="search-highlight">${match.text}</span>${match.after}...</div>
                         `;
-                        
+
                         resultItem.addEventListener('click', () => {
                             currentMatchIndex = match.globalIndex;
                             highlightCurrentMatch();
                             updateResultsListHighlight();
                         });
-                        
+
                         searchResults.appendChild(resultItem);
                     });
                 }
@@ -774,12 +789,12 @@
             // Highlight current match in PDF
             function highlightCurrentMatch() {
                 if (currentMatchIndex < 0 || currentMatchIndex >= searchMatches.length) return;
-                
+
                 const match = searchMatches[currentMatchIndex];
-                
+
                 // Scroll to page in PDF viewer
                 pdfViewer.contentWindow.PDFViewerApplication.page = match.page;
-                
+
                 // Highlight text (this would require more advanced PDF.js integration)
                 // For now, we'll just show which result is active in the list
                 updateResultsListHighlight();
@@ -796,24 +811,24 @@
             // Go to previous match
             function goToPreviousMatch() {
                 if (searchMatches.length === 0) return;
-                
+
                 currentMatchIndex--;
                 if (currentMatchIndex < 0) {
                     currentMatchIndex = searchMatches.length - 1;
                 }
-                
+
                 highlightCurrentMatch();
             }
 
             // Go to next match
             function goToNextMatch() {
                 if (searchMatches.length === 0) return;
-                
+
                 currentMatchIndex++;
                 if (currentMatchIndex >= searchMatches.length) {
                     currentMatchIndex = 0;
                 }
-                
+
                 highlightCurrentMatch();
             }
 
@@ -837,6 +852,12 @@
             // Initialize the application
             init();
         });
+
+        function openPage(page) {
+            window.location.href = page; // This redirects to the specified HTML page
+        }
+
     </script>
 </body>
+
 </html>
