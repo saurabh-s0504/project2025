@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rotate PDF and Download</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; text-align: center; }
+    canvas { border: 1px solid #ccc; margin-top: 20px; }
+    button { margin: 10px; padding: 10px 20px; }
+  </style>
+</head>
+<body>
+
+  <h2>Rotate and Download PDF Page</h2>
+  <input type="file" id="fileInput" accept="application/pdf" />
+  <br>
+  <button id="rotateBtn" disabled>🔄 Rotate 90°</button>
+  <button id="downloadBtn" disabled>⬇️ Download Rotated PDF</button>
+  <br>
+  <canvas id="pdfCanvas"></canvas>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const rotateBtn = document.getElementById('rotateBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const canvas = document.getElementById('pdfCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let pdfDoc = null;
+    let currentPage = null;
+    let rotation = 0;
+
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const arrayBuffer = await file.arrayBuffer();
+      pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+      // Load the first page
+      currentPage = await pdfDoc.getPage(1);
+      rotation = 0;
+      renderPage(currentPage, rotation);
+
+      rotateBtn.disabled = false;
+      downloadBtn.disabled = false;
+    });
+
+    rotateBtn.addEventListener('click', () => {
+      if (!currentPage) return;
+      rotation = (rotation + 90) % 360;
+      renderPage(currentPage, rotation);
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if (!currentPage) return;
+
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({
+        orientation: rotation === 90 || rotation === 270 ? 'landscape' : 'portrait',
+        unit: 'pt',
+        format: [canvas.width, canvas.height]
+      });
+
+      pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+      pdf.save('rotated.pdf');
+    });
+
+    function renderPage(page, rotation) {
+      const viewport = page.getViewport({ scale: 1, rotation });
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      const renderContext = {
+        canvasContext: ctx,
+        viewport: viewport
+      };
+      page.render(renderContext);
+    }
+  </script>
+
+</body>
+</html>
