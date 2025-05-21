@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JPG to PDF | PDF Toolkit Pro</title>
+    <title>DRPDFS JPG to PDF | PDF Toolkit Pro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
@@ -18,47 +19,48 @@
             --text-muted: #5f6368;
             --border: #dadce0;
         }
-        
+
         body {
             font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: #f8f9fa;
             color: var(--text-dark);
         }
-        
+
         .navbar {
             background-color: var(--light);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             border-bottom: 1px solid var(--border);
         }
-        
+
         .navbar-brand {
             font-weight: 500;
             color: var(--primary);
         }
-        
+
         .nav-link {
             color: var(--text-dark);
             font-weight: 500;
         }
-        
-        .nav-link:hover, .nav-link.active {
+
+        .nav-link:hover,
+        .nav-link.active {
             color: var(--primary);
         }
-        
+
         .tool-card {
             background: var(--light);
             border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             border: 1px solid var(--border);
             overflow: hidden;
         }
-        
+
         .tool-header {
             background: var(--primary);
             color: white;
             padding: 1.25rem;
         }
-        
+
         .upload-zone {
             border: 2px dashed var(--border);
             border-radius: 8px;
@@ -68,39 +70,39 @@
             transition: all 0.2s ease;
             background: var(--light);
         }
-        
+
         .upload-zone:hover {
             border-color: var(--primary);
             background: rgba(66, 133, 244, 0.05);
         }
-        
+
         .upload-icon {
             font-size: 3rem;
             color: var(--primary);
             margin-bottom: 1rem;
         }
-        
+
         .btn-primary {
             background-color: var(--primary);
             border-color: var(--primary);
             font-weight: 500;
             padding: 0.5rem 1.25rem;
         }
-        
+
         .btn-primary:hover {
             background-color: #3367d6;
             border-color: #3367d6;
         }
-        
+
         .btn-outline-primary {
             color: var(--primary);
             border-color: var(--primary);
         }
-        
+
         .btn-outline-primary:hover {
             background-color: rgba(66, 133, 244, 0.1);
         }
-        
+
         .preview-container {
             position: relative;
             border: 1px solid var(--border);
@@ -113,27 +115,27 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .preview-jpg {
             max-width: 100%;
             max-height: 100%;
             display: block;
             margin: 0 auto;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             background-color: white;
         }
-        
+
         .result-card {
             background: rgba(52, 168, 83, 0.1);
             border-radius: 8px;
             border-left: 4px solid var(--success);
         }
-        
+
         .progress-thin {
             height: 4px;
             background-color: #f1f3f4;
         }
-        
+
         .tool-icon {
             width: 40px;
             height: 40px;
@@ -146,21 +148,26 @@
             font-size: 1.25rem;
             margin-bottom: 0.75rem;
         }
-        
-        h1, h2, h3, h4, h5, h6 {
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
             color: var(--text-dark);
             font-weight: 500;
         }
-        
+
         .text-muted {
             color: var(--text-muted);
         }
-        
+
         footer {
             background-color: var(--light);
             border-top: 1px solid var(--border);
         }
-        
+
         /* JPG list styles */
         .jpg-list {
             display: flex;
@@ -168,7 +175,7 @@
             gap: 10px;
             margin-bottom: 1rem;
         }
-        
+
         .jpg-thumbnail {
             width: 100px;
             height: 100px;
@@ -178,22 +185,22 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        
+
         .jpg-thumbnail:hover {
             border-color: var(--primary);
         }
-        
+
         .jpg-thumbnail.active {
             border-color: var(--primary);
             box-shadow: 0 0 0 2px var(--primary);
         }
-        
+
         /* Cropper container */
         .cropper-container {
             max-width: 100%;
             max-height: 400px;
         }
-        
+
         /* Adjustment controls */
         .adjustment-controls {
             background: var(--light);
@@ -202,7 +209,7 @@
             margin-bottom: 1rem;
             border: 1px solid var(--border);
         }
-        
+
         /* Ad container styles */
         .ad-container {
             background-color: #f8f9fa;
@@ -217,7 +224,7 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .ad-label {
             font-size: 0.75rem;
             color: #5f6368;
@@ -225,7 +232,7 @@
             margin-bottom: 10px;
             letter-spacing: 1px;
         }
-        
+
         .ad-placeholder {
             width: 100%;
             height: 200px;
@@ -236,26 +243,26 @@
             color: #6c757d;
             border-radius: 4px;
         }
-        
+
         .error-message {
             color: var(--accent);
             margin-top: 1rem;
             text-align: center;
         }
-        
+
         .page-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
         }
-        
+
         .spinner-border {
             width: 1.5rem;
             height: 1.5rem;
             border-width: 0.2em;
         }
-        
+
         .cloud-btn {
             display: inline-flex;
             align-items: center;
@@ -266,19 +273,19 @@
             color: white;
             text-decoration: none;
         }
-        
+
         .cloud-btn i {
             margin-right: 0.5rem;
         }
-        
+
         .google-drive-btn {
             background-color: #4285F4;
         }
-        
+
         .dropbox-btn {
             background-color: #0061FF;
         }
-        
+
         .batch-indicator {
             position: fixed;
             bottom: 20px;
@@ -291,14 +298,14 @@
             z-index: 1000;
             display: none;
         }
-        
+
         .crop-toggle {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1rem;
         }
-        
+
         .pdf-settings {
             background: var(--light);
             border-radius: 8px;
@@ -308,11 +315,12 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <i class="fas fa-file-pdf me-2"></i>PDF Toolkit Pro
+                <i class="fas fa-file-pdf me-2"></i>DRPDFS
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -325,12 +333,14 @@
                     <li class="nav-item mx-2">
                         <a class="nav-link active" href="#">Tools</a>
                     </li>
+                    <!--
                     <li class="nav-item mx-2">
                         <a class="nav-link" href="#">Pricing</a>
                     </li>
                     <li class="nav-item mx-2">
                         <a class="nav-link" href="#">Support</a>
                     </li>
+                    -->
                 </ul>
             </div>
         </div>
@@ -356,7 +366,7 @@
                             </button>
                             <input type="file" id="fileInput" accept=".jpg,.jpeg" multiple style="display: none;">
                         </div>
-                        
+
                         <div id="toolContainer" style="display: none;">
                             <div class="pdf-settings mb-3">
                                 <h6 class="mb-3"><i class="fas fa-cog me-2"></i>PDF Settings</h6>
@@ -397,7 +407,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="crop-toggle mb-3">
                                 <h6 class="mb-0"><i class="fas fa-crop me-2"></i>Crop JPGs</h6>
                                 <div class="form-check form-switch">
@@ -405,12 +415,12 @@
                                     <label class="form-check-label" for="enableCropToggle">Enable Cropping</label>
                                 </div>
                             </div>
-                            
+
                             <div id="jpgListContainer" class="mb-3">
                                 <h6 class="mb-2"><i class="fas fa-file-image me-2"></i>JPGs</h6>
                                 <div id="jpgList" class="jpg-list"></div>
                             </div>
-                            
+
                             <div class="preview-container mb-3" id="previewContainer">
                                 <div id="cropperContainer" style="display: none;">
                                     <div class="page-nav">
@@ -439,7 +449,7 @@
                                     <p>Select a JPG to preview or crop</p>
                                 </div>
                             </div>
-                            
+
                             <div class="d-flex flex-wrap gap-2 justify-content-between mb-3">
                                 <div class="d-flex gap-2">
                                     <button class="btn btn-outline-primary" id="removeJpgBtn">
@@ -453,26 +463,28 @@
                                     <i class="fas fa-file-pdf me-1"></i>Generate PDF
                                 </button>
                             </div>
-                            
+
                             <div id="progressContainer" class="mt-3" style="display: none;">
                                 <div class="d-flex justify-content-between mb-1">
                                     <small id="progressText">Processing...</small>
                                     <small id="progressPercent">0%</small>
                                 </div>
                                 <div class="progress progress-thin">
-                                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%">
+                                    </div>
                                 </div>
                             </div>
-                            
+
                             <div id="resultContainer" class="result-card p-3 mt-3" style="display: none;">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <div>
-                                        <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>PDF Created</h5>
+                                        <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>PDF
+                                            Created</h5>
                                         <p class="text-muted mb-0" id="pageCount">1 page converted</p>
                                     </div>
                                     <span class="badge bg-success">Ready</span>
                                 </div>
-                                
+
                                 <div class="d-flex flex-wrap gap-2 justify-content-end">
                                     <button id="downloadBtn" class="btn btn-primary btn-sm">
                                         <i class="fas fa-file-pdf me-1"></i>Download
@@ -483,10 +495,12 @@
                                     <button id="newFileBtn" class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-redo me-1"></i>New File
                                     </button>
-                                    <a href="#" id="saveToDriveBtn" class="cloud-btn google-drive-btn btn-sm" target="_blank" rel="noopener noreferrer">
+                                    <a href="#" id="saveToDriveBtn" class="cloud-btn google-drive-btn btn-sm"
+                                        target="_blank" rel="noopener noreferrer">
                                         <i class="fab fa-google-drive"></i>Save to Drive
                                     </a>
-                                    <a href="#" id="saveToDropboxBtn" class="cloud-btn dropbox-btn btn-sm" target="_blank" rel="noopener noreferrer">
+                                    <a href="#" id="saveToDropboxBtn" class="cloud-btn dropbox-btn btn-sm"
+                                        target="_blank" rel="noopener noreferrer">
                                         <i class="fab fa-dropbox"></i>Save to Dropbox
                                     </a>
                                 </div>
@@ -494,7 +508,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="row g-3 mb-3">
                     <div class="col-md-3">
                         <div class="p-3 h-100 bg-white rounded border">
@@ -534,7 +548,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-lg-4">
                 <!-- Ad Container -->
                 <div class="ad-container mb-4">
@@ -543,12 +557,12 @@
                         <div>Ad Space (300x250)</div>
                     </div>
                 </div>
-                
+
                 <div class="p-3 mb-3 bg-white rounded border">
                     <h5 class="mb-2"><i class="fas fa-tools me-2"></i>Other Tools</h5>
                     <div class="list-group list-group-flush">
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center" onclick="openPage('pdfscanner.html')">
                                 <div class="me-2 text-primary">
                                     <i class="fas fa-camera"></i>
                                 </div>
@@ -556,7 +570,7 @@
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center" onclick="openPage('rotatepdf.html')">
                                 <div class="me-2 text-success">
                                     <i class="fas fa-redo"></i>
                                 </div>
@@ -564,7 +578,7 @@
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
+                            <div class="d-flex align-items-center" onclick="openPage('pdfcompress.html')">
                                 <div class="me-2 text-warning">
                                     <i class="fas fa-compress-alt"></i>
                                 </div>
@@ -572,16 +586,16 @@
                             </div>
                         </a>
                         <a href="#" class="list-group-item list-group-item-action border-0 py-2">
-                            <div class="d-flex align-items-center">
-                                <div class="me-2 text-danger">
-                                    <i class="fas fa-font"></i>
+                            <div class="d-flex align-items-center" onclick="openPage('pdftojpg.html')">
+                                <div class="me-3 text-success">
+                                    <i class="fas fa-image"></i>
                                 </div>
-                                <div>OCR PDF</div>
+                                <div>PDF to Image</div>
                             </div>
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="p-3 bg-white rounded border">
                     <h5 class="mb-2"><i class="fas fa-lightbulb me-2"></i>Conversion Tips</h5>
                     <ul class="small text-muted">
@@ -603,7 +617,7 @@
 
     <footer class="py-3 mt-4 border-top">
         <div class="container text-center">
-            <p class="text-muted small mb-0">&copy; 2023 PDF Toolkit Pro. All rights reserved.</p>
+            <p class="text-muted small mb-0">&copy; 2025 DRPDFS. All rights reserved.</p>
         </div>
     </footer>
 
@@ -612,7 +626,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // DOM Elements
             const uploadArea = document.getElementById('uploadArea');
             const uploadBtn = document.getElementById('uploadBtn');
@@ -678,19 +692,19 @@
             function handleFileSelect(event) {
                 const files = event.target.files;
                 if (!files || files.length === 0) return;
-                
+
                 // Filter only JPG files
-                const jpgFiles = Array.from(files).filter(file => 
-                    file.type === 'image/jpeg' || 
+                const jpgFiles = Array.from(files).filter(file =>
+                    file.type === 'image/jpeg' ||
                     file.name.toLowerCase().endsWith('.jpg') ||
                     file.name.toLowerCase().endsWith('.jpeg')
                 );
-                
+
                 if (jpgFiles.length === 0) {
                     alert('Please select JPG files (.jpg or .jpeg)');
                     return;
                 }
-                
+
                 // Process each JPG
                 processJpgs(jpgFiles);
             }
@@ -700,7 +714,7 @@
                 // Show tool interface
                 uploadArea.style.display = 'none';
                 toolContainer.style.display = 'block';
-                
+
                 // Clear previous JPGs
                 jpgs = [];
                 jpgList.innerHTML = '';
@@ -708,11 +722,11 @@
                 jpgPreview.style.display = 'none';
                 noPreviewMessage.style.display = 'block';
                 cropperContainer.style.display = 'none';
-                
+
                 // Process each file
                 files.forEach(file => {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         const jpgData = e.target.result;
                         jpgs.push({
                             original: jpgData,
@@ -720,16 +734,16 @@
                             name: file.name,
                             cropData: null
                         });
-                        
+
                         // Add to JPG list
                         addJpgToThumbnails(jpgData, jpgs.length - 1);
-                        
+
                         // Show first JPG as preview
                         if (jpgs.length === 1) {
                             showJpgPreview(0);
                         }
                     };
-                    reader.onerror = function() {
+                    reader.onerror = function () {
                         console.error('Error reading file:', file.name);
                     };
                     reader.readAsDataURL(file);
@@ -744,21 +758,21 @@
                 img.dataset.index = index;
                 img.alt = `Thumbnail ${index + 1}`;
                 img.addEventListener('click', () => showJpgPreview(index));
-                
+
                 jpgList.appendChild(img);
             }
 
             // Show JPG preview
             function showJpgPreview(index) {
                 if (index < 0 || index >= jpgs.length) return;
-                
+
                 currentJpgIndex = index;
                 const jpgData = jpgs[index].modified;
                 jpgPreview.src = jpgData;
                 jpgPreview.style.display = 'block';
                 noPreviewMessage.style.display = 'none';
                 cropperContainer.style.display = 'none';
-                
+
                 // Highlight selected thumbnail
                 document.querySelectorAll('.jpg-thumbnail').forEach((thumb, i) => {
                     thumb.classList.toggle('active', i === index);
@@ -768,19 +782,19 @@
             // Open cropper for current JPG
             function openCropper() {
                 if (currentJpgIndex < 0 || !enableCropToggle.checked) return;
-                
+
                 const currentJpg = jpgs[currentJpgIndex];
                 jpgToCrop.src = currentJpg.modified;
-                
+
                 // Hide preview and show cropper
                 jpgPreview.style.display = 'none';
                 cropperContainer.style.display = 'block';
-                
+
                 // Initialize cropper
                 if (cropper) {
                     cropper.destroy();
                 }
-                
+
                 cropper = new Cropper(jpgToCrop, {
                     aspectRatio: NaN,
                     viewMode: 1,
@@ -788,7 +802,7 @@
                     responsive: true,
                     guides: true,
                     background: false,
-                    ready: function() {
+                    ready: function () {
                         // Apply previous crop if exists
                         if (currentJpg.cropData) {
                             cropper.setData(currentJpg.cropData);
@@ -801,7 +815,7 @@
             function closeCropper() {
                 cropperContainer.style.display = 'none';
                 jpgPreview.style.display = 'block';
-                
+
                 if (cropper) {
                     cropper.destroy();
                     cropper = null;
@@ -818,7 +832,7 @@
             // Apply crop
             function applyCrop() {
                 if (!cropper || currentJpgIndex < 0) return;
-                
+
                 try {
                     // Get canvas with cropped JPG
                     const canvas = cropper.getCroppedCanvas({
@@ -832,31 +846,31 @@
                         imageSmoothingEnabled: true,
                         imageSmoothingQuality: 'high',
                     });
-                    
+
                     if (!canvas) {
                         throw new Error('Cropping failed');
                     }
-                    
+
                     // Get the JPG data
                     const jpgData = canvas.toDataURL('image/jpeg', parseFloat(jpgQuality.value));
-                    
+
                     // Update the JPG in our array
                     jpgs[currentJpgIndex] = {
                         ...jpgs[currentJpgIndex],
                         modified: jpgData,
                         cropData: cropper.getData()
                     };
-                    
+
                     // Update thumbnail
                     const thumbnails = document.querySelectorAll('.jpg-thumbnail');
                     if (thumbnails[currentJpgIndex]) {
                         thumbnails[currentJpgIndex].src = jpgData;
                     }
-                    
+
                     // Close cropper and show preview
                     closeCropper();
                     jpgPreview.src = jpgData;
-                    
+
                 } catch (error) {
                     console.error('Error applying crop:', error);
                     alert('Error applying crop. Please try again.');
@@ -866,16 +880,16 @@
             // Remove current JPG
             function removeCurrentJpg() {
                 if (currentJpgIndex < 0) return;
-                
+
                 // Remove current JPG
                 jpgs.splice(currentJpgIndex, 1);
                 jpgList.innerHTML = '';
-                
+
                 // Rebuild thumbnails
                 jpgs.forEach((jpg, index) => {
                     addJpgToThumbnails(jpg.modified, index);
                 });
-                
+
                 if (jpgs.length === 0) {
                     // No JPGs left, reset UI
                     jpgPreview.style.display = 'none';
@@ -892,41 +906,41 @@
             // Generate PDF from JPGs
             async function generatePdf() {
                 if (jpgs.length === 0) return;
-                
+
                 try {
                     // Show progress
                     progressContainer.style.display = 'block';
                     resultContainer.style.display = 'none';
                     generatePdfBtn.disabled = true;
                     generatePdfBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Creating PDF...';
-                    
+
                     // Show batch indicator for multiple JPGs
                     if (jpgs.length > 1) {
                         batchIndicator.style.display = 'flex';
                     }
-                    
+
                     // Create a new PDF document
                     const { PDFDocument, rgb } = PDFLib;
                     const pdfDoc = await PDFDocument.create();
-                    
+
                     // Process each JPG
                     for (let i = 0; i < jpgs.length; i++) {
                         // Update batch status
                         if (jpgs.length > 1) {
                             batchStatusText.textContent = `Processing JPGs: ${i + 1} of ${jpgs.length}`;
                         }
-                        
+
                         try {
                             // Convert data URL to Uint8Array
                             const jpgBytes = await fetch(jpgs[i].modified).then(res => res.arrayBuffer());
-                            
+
                             // Embed the JPG in the PDF
                             const pdfJpg = await pdfDoc.embedJpg(jpgBytes);
-                            
+
                             // Determine page size
                             let pageWidth, pageHeight;
                             const margin = parseInt(marginSize.value);
-                            
+
                             if (pageSize.value === 'auto') {
                                 // Use JPG dimensions
                                 pageWidth = pdfJpg.width + (margin * 2);
@@ -951,61 +965,61 @@
                                         width = 595;
                                         height = 842;
                                 }
-                                
+
                                 // Adjust for orientation
-                                if (pageOrientation.value === 'landscape' || 
+                                if (pageOrientation.value === 'landscape' ||
                                     (pageOrientation.value === 'auto' && pdfJpg.width > pdfJpg.height)) {
                                     [width, height] = [height, width];
                                 }
-                                
+
                                 pageWidth = width;
                                 pageHeight = height;
                             }
-                            
+
                             // Add a page
                             const page = pdfDoc.addPage([pageWidth, pageHeight]);
-                            
+
                             // Draw the JPG centered on the page
                             const scale = Math.min(
                                 (pageWidth - (margin * 2)) / pdfJpg.width,
                                 (pageHeight - (margin * 2)) / pdfJpg.height
                             );
-                            
+
                             const scaledWidth = pdfJpg.width * scale;
                             const scaledHeight = pdfJpg.height * scale;
-                            
+
                             page.drawImage(pdfJpg, {
                                 x: margin + ((pageWidth - (margin * 2) - scaledWidth) / 2),
                                 y: margin + ((pageHeight - (margin * 2) - scaledHeight) / 2),
                                 width: scaledWidth,
                                 height: scaledHeight,
                             });
-                            
+
                             // Update progress
                             const percent = Math.round(((i + 1) / jpgs.length) * 100);
                             progressBar.style.width = `${percent}%`;
                             progressPercent.textContent = `${percent}%`;
-                            
+
                         } catch (error) {
                             console.error('Error processing JPG:', error);
                         }
                     }
-                    
+
                     // Save the PDF
                     currentPdfBytes = await pdfDoc.save();
-                    pdfName = jpgs.length === 1 ? 
-                        jpgs[0].name.replace(/\.[^/.]+$/, "") + '.pdf' : 
+                    pdfName = jpgs.length === 1 ?
+                        jpgs[0].name.replace(/\.[^/.]+$/, "") + '.pdf' :
                         'converted-jpgs.pdf';
-                    
+
                     // Show result
                     progressContainer.style.display = 'none';
                     resultContainer.style.display = 'block';
                     batchIndicator.style.display = 'none';
                     pageCount.textContent = `${jpgs.length} page${jpgs.length !== 1 ? 's' : ''} converted`;
-                    
+
                     // Update cloud storage links
                     updateCloudStorageLinks(currentPdfBytes);
-                    
+
                 } catch (error) {
                     console.error('Error generating PDF:', error);
                     alert('Error generating PDF. Please try again.');
@@ -1020,14 +1034,14 @@
                 // Create a blob URL for the PDF
                 const blob = new Blob([pdfBytes], { type: 'application/pdf' });
                 const pdfUrl = URL.createObjectURL(blob);
-                
+
                 // Google Drive
                 saveToDriveBtn.href = `https://drive.google.com/u/0/get_video_info?docid=`;
                 saveToDriveBtn.onclick = (e) => {
                     e.preventDefault();
                     window.open(`https://drive.google.com/drive/u/0/my-drive?upload=true&usp=upload_widget&url=${encodeURIComponent(pdfUrl)}&title=${encodeURIComponent(pdfName)}`, '_blank');
                 };
-                
+
                 // Dropbox
                 saveToDropboxBtn.href = '#';
                 saveToDropboxBtn.onclick = (e) => {
@@ -1036,22 +1050,22 @@
                     dropboxScript.type = 'text/javascript';
                     dropboxScript.src = 'https://www.dropbox.com/static/api/2/dropins.js';
                     dropboxScript.setAttribute('data-app-key', 'YOUR_DROPBOX_APP_KEY');
-                    dropboxScript.onload = function() {
+                    dropboxScript.onload = function () {
                         Dropbox.save({
                             files: [{
                                 url: pdfUrl,
                                 filename: pdfName
                             }],
-                            success: function() {
+                            success: function () {
                                 console.log('File saved to Dropbox');
                             },
-                            progress: function(progress) {
+                            progress: function (progress) {
                                 console.log('Upload progress:', progress);
                             },
-                            cancel: function() {
+                            cancel: function () {
                                 console.log('Upload cancelled');
                             },
-                            error: function(error) {
+                            error: function (error) {
                                 console.error('Dropbox error:', error);
                             }
                         });
@@ -1063,7 +1077,7 @@
             // Download the generated PDF
             function downloadPdf() {
                 if (!currentPdfBytes) return;
-                
+
                 const blob = new Blob([currentPdfBytes], { type: 'application/pdf' });
                 saveAs(blob, pdfName);
             }
@@ -1071,7 +1085,7 @@
             // Share the PDF
             function sharePdf() {
                 if (!currentPdfBytes) return;
-                
+
                 if (navigator.share) {
                     navigator.share({
                         title: 'Converted JPGs PDF',
@@ -1090,10 +1104,10 @@
             function saveToGoogleDrive(e) {
                 e.preventDefault();
                 if (!currentPdfBytes) return;
-                
+
                 const blob = new Blob([currentPdfBytes], { type: 'application/pdf' });
                 const pdfUrl = URL.createObjectURL(blob);
-                
+
                 window.open(`https://drive.google.com/drive/u/0/my-drive?upload=true&usp=upload_widget&url=${encodeURIComponent(pdfUrl)}&title=${encodeURIComponent(pdfName)}`, '_blank');
             }
 
@@ -1101,30 +1115,30 @@
             function saveToDropbox(e) {
                 e.preventDefault();
                 if (!currentPdfBytes) return;
-                
+
                 const blob = new Blob([currentPdfBytes], { type: 'application/pdf' });
                 const pdfUrl = URL.createObjectURL(blob);
-                
+
                 const dropboxScript = document.createElement('script');
                 dropboxScript.type = 'text/javascript';
                 dropboxScript.src = 'https://www.dropbox.com/static/api/2/dropins.js';
                 dropboxScript.setAttribute('data-app-key', 'YOUR_DROPBOX_APP_KEY');
-                dropboxScript.onload = function() {
+                dropboxScript.onload = function () {
                     Dropbox.save({
                         files: [{
                             url: pdfUrl,
                             filename: pdfName
                         }],
-                        success: function() {
+                        success: function () {
                             console.log('File saved to Dropbox');
                         },
-                        progress: function(progress) {
+                        progress: function (progress) {
                             console.log('Upload progress:', progress);
                         },
-                        cancel: function() {
+                        cancel: function () {
                             console.log('Upload cancelled');
                         },
-                        error: function(error) {
+                        error: function (error) {
                             console.error('Dropbox error:', error);
                         }
                     });
@@ -1140,12 +1154,12 @@
                 currentPdfBytes = null;
                 pdfName = 'converted-jpgs.pdf';
                 fileInput.value = '';
-                
+
                 if (cropper) {
                     cropper.destroy();
                     cropper = null;
                 }
-                
+
                 // Reset UI
                 toolContainer.style.display = 'none';
                 uploadArea.style.display = 'block';
@@ -1156,11 +1170,11 @@
                 noPreviewMessage.style.display = 'block';
                 cropperContainer.style.display = 'none';
                 batchIndicator.style.display = 'none';
-                
+
                 // Reset buttons
                 generatePdfBtn.disabled = false;
                 generatePdfBtn.innerHTML = '<i class="fas fa-file-pdf me-1"></i>Generate PDF';
-                
+
                 // Reset settings
                 enableCropToggle.checked = true;
                 pageSize.value = 'auto';
@@ -1172,6 +1186,12 @@
             // Initialize the application
             init();
         });
+
+        function openPage(page) {
+            window.location.href = page; // This redirects to the specified HTML page
+        }
+
     </script>
 </body>
+
 </html>
