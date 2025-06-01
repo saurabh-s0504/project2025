@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Pages | PDF Toolkit Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4285f4;
+            --secondary: #ffffff;
+            --accent: #ea4335;
+            --success: #34a853;
+            --light: #ffffff;
+            --text-dark: #202124;
+            --text-muted: #5f6368;
+            --border: #dadce0;
+        }
+        
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+        }
+        
+        .navbar {
+            background-color: var(--light);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .navbar-brand {
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .nav-link {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+        
+        .tool-card {
+            background: var(--light);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .tool-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.25rem;
+        }
+        
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: var(--light);
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: rgba(66, 133, 244, 0.05);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: #3367d6;
+            border-color: #3367d6;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: rgba(66, 133, 244, 0.1);
+        }
+        
+        .preview-container {
+            position: relative;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f1f3f4;
+            margin-bottom: 1rem;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .pdf-viewport {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .pdf-page-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .pdf-page {
+            max-width: 100%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            background-color: white;
+        }
+        
+        .result-card {
+            background: rgba(52, 168, 83, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .progress-thin {
+            height: 4px;
+            background-color: #f1f3f4;
+        }
+        
+        .tool-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(66, 133, 244, 0.1);
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        
+        .text-muted {
+            color: var(--text-muted);
+        }
+        
+        footer {
+            background-color: var(--light);
+            border-top: 1px solid var(--border);
+        }
+        
+        .numbering-options {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+        
+        .option-group {
+            margin-bottom: 1rem;
+        }
+        
+        .option-title {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-title i {
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .preview-page {
+            width: 200px;
+            height: 280px;
+            background-color: white;
+            border: 1px solid var(--border);
+            margin: 0 auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .page-number-preview {
+            position: absolute;
+            padding: 0.25rem 0.5rem;
+            background-color: rgba(0,0,0,0.05);
+            border-radius: 4px;
+        }
+        
+        .error-message {
+            color: var(--accent);
+            margin-top: 1rem;
+            text-align: center;
+        }
+        
+        .ad-container {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-label {
+            font-size: 0.75rem;
+            color: #5f6368;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .ad-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            border-radius: 4px;
+        }
+        
+        .cloud-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 0.25rem;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .cloud-btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .google-drive-btn {
+            background-color: #4285F4;
+        }
+        
+        .dropbox-btn {
+            background-color: #0061FF;
+        }
+        
+        .preview-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.9);
+            border-top: 1px solid var(--border);
+        }
+        
+        .preview-nav-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .preview-nav-btn:hover {
+            background-color: #3367d6;
+            transform: scale(1.05);
+        }
+        
+        .preview-nav-btn:disabled {
+            background-color: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .page-counter {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            min-width: 100px;
+            justify-content: center;
+        }
+        
+        .no-preview-content {
+            text-align: center;
+            padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .no-preview-icon {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+        
+        /* Custom scrollbar for preview */
+        .pdf-viewport::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .pdf-viewport::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        .pdf-viewport::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        .pdf-viewport::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-file-pdf me-2"></i>PDF Toolkit Pro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link active" href="#">Tools</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item mx-2">
+                        <a class="nav-link" href="#">Support</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="tool-card mb-3">
+                    <div class="tool-header">
+                        <h4 class="mb-0"><i class="fas fa-sort-numeric-up me-2"></i>Number Pages</h4>
+                        <p class="mb-0 opacity-75">Add page numbers to your PDF documents</p>
+                    </div>
+                    <div class="p-3">
+                        <div id="uploadArea" class="upload-zone mb-3">
+                            <div class="upload-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <h5 class="mb-2">Upload PDF to Number Pages</h5>
+                            <p class="text-muted mb-3">Drag &amp; drop your PDF or click to browse</p>
+                            <button class="btn btn-primary px-3" id="uploadBtn">
+                                <i class="fas fa-upload me-1"></i>Select PDF
+                            </button>
+                            <input type="file" id="fileInput" accept=".pdf" style="display: none;">
+                        </div>
+                        
+                        <div id="toolContainer" style="display: none;">
+                            <div class="numbering-options mb-3">
+                                <h5 class="mb-3"><i class="fas fa-sliders-h me-2"></i>Numbering Options</h5>
+                                
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="option-group">
+                                            <div class="option-title">
+                                                <i class="fas fa-font"></i>Number Format
+                                            </div>
+                                            <select class="form-select" id="numberFormat">
+                                                <option value="1">1, 2, 3...</option>
+                                                <option value="i">i, ii, iii...</option>
+                                                <option value="I">I, II, III...</option>
+                                                <option value="a">a, b, c...</option>
+                                                <option value="A">A, B, C...</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="option-group">
+                                            <div class="option-title">
+                                                <i class="fas fa-paint-brush"></i>Text Style
+                                            </div>
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <select class="form-select" id="fontFamily">
+                                                        <option value="Helvetica">Helvetica</option>
+                                                        <option value="Times-Roman">Times New Roman</option>
+                                                        <option value="Courier">Courier</option>
+                                                        <option value="Arial">Arial</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-3">
+                                                    <select class="form-select" id="fontSize">
+                                                        <option value="8">8pt</option>
+                                                        <option value="10">10pt</option>
+                                                        <option value="12" selected>12pt</option>
+                                                        <option value="14">14pt</option>
+                                                        <option value="16">16pt</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-3">
+                                                    <select class="form-select" id="fontWeight">
+                                                        <option value="normal">Regular</option>
+                                                        <option value="bold">Bold</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="option-group">
+                                            <div class="option-title">
+                                                <i class="fas fa-tint"></i>Text Color
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <input type="color" class="form-control form-control-color" id="textColor" value="#000000" title="Choose text color">
+                                                <span class="ms-2 small">Black (#000000)</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="option-group">
+                                            <div class="option-title">
+                                                <i class="fas fa-border-all"></i>Background
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <input type="color" class="form-control form-control-color" id="bgColor" value="#ffffff" title="Choose background color">
+                                                <span class="ms-2 small">None (transparent)</span>
+                                            </div>
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" id="showBackground" checked>
+                                                <label class="form-check-label small" for="showBackground">Show background</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="option-group">
+                                            <div class="option-title">
+                                                <i class="fas fa-arrows-alt"></i>Position
+                                            </div>
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <select class="form-select" id="horizontalPos">
+                                                        <option value="left">Left</option>
+                                                        <option value="center" selected>Center</option>
+                                                        <option value="right">Right</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-6">
+                                                    <select class="form-select" id="verticalPos">
+                                                        <option value="top">Top</option>
+                                                        <option value="bottom" selected>Bottom</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <div class="option-group">
+                                            <div class="option-title">
+                                                <i class="fas fa-ruler"></i>Margins
+                                            </div>
+                                            <div class="row g-2">
+                                                <div class="col-6">
+                                                    <input type="number" class="form-control" id="marginX" placeholder="Horizontal" value="20" min="0" max="100">
+                                                </div>
+                                                <div class="col-6">
+                                                    <input type="number" class="form-control" id="marginY" placeholder="Vertical" value="20" min="0" max="100">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <div class="option-group">
+                                            <div class="option-title">
+                                                <i class="fas fa-eye"></i>Preview
+                                            </div>
+                                            <div class="preview-page">
+                                                <div class="page-number-preview" id="pageNumberPreview">1</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="preview-container mb-3" id="previewContainer">
+                                <div id="pdfViewport" class="pdf-viewport">
+                                    <div id="noPreviewMessage" class="no-preview-content">
+                                        <div class="no-preview-icon">
+                                            <i class="fas fa-file-pdf"></i>
+                                        </div>
+                                        <p class="text-muted">PDF preview will appear here</p>
+                                    </div>
+                                    <div id="pdfPagesContainer" style="display: none;"></div>
+                                </div>
+                                <div class="preview-controls">
+                                    <button class="preview-nav-btn" id="prevPageBtn" disabled>
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <span class="page-counter">
+                                        Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+                                    </span>
+                                    <button class="preview-nav-btn" id="nextPageBtn" disabled>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-2 justify-content-between mb-3">
+                                <button class="btn btn-outline-primary" id="resetOptionsBtn">
+                                    <i class="fas fa-undo me-1"></i>Reset Options
+                                </button>
+                                <button class="btn btn-primary" id="numberPagesBtn">
+                                    <i class="fas fa-sort-numeric-up me-1"></i>Number Pages
+                                </button>
+                            </div>
+                            
+                            <div id="progressContainer" class="mt-3" style="display: none;">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <small id="progressText">Adding page numbers...</small>
+                                    <small id="progressPercent">0%</small>
+                                </div>
+                                <div class="progress progress-thin">
+                                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            
+                            <div id="resultContainer" class="result-card p-3 mt-3" style="display: none;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <h5 class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>PDF Processed</h5>
+                                        <p class="text-muted mb-0" id="pageCount">Page numbers added successfully</p>
+                                    </div>
+                                    <span class="badge bg-success">Ready</span>
+                                </div>
+                                
+                                <div class="d-flex flex-wrap gap-2 justify-content-end">
+                                    <button id="downloadBtn" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-file-pdf me-1"></i>Download
+                                    </button>
+                                    <button id="shareBtn" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-share-alt me-1"></i>Share
+                                    </button>
+                                    <button id="newFileBtn" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-redo me-1"></i>New File
+                                    </button>
+                                    <a href="#" id="saveToDriveBtn" class="cloud-btn google-drive-btn btn-sm" target="_blank" rel="noopener noreferrer">
+                                        <i class="fab fa-google-drive"></i>Save to Drive
+                                    </a>
+                                    <a href="#" id="saveToDropboxBtn" class="cloud-btn dropbox-btn btn-sm" target="_blank" rel="noopener noreferrer">
+                                        <i class="fab fa-dropbox"></i>Save to Dropbox
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <h6 class="text-center mb-2">PDF Format</h6>
+                            <p class="text-muted small text-center">Works with all standard PDF files</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-sort-numeric-up"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Flexible Numbering</h6>
+                            <p class="text-muted small text-center">Multiple number formats and styles</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Cloud Save</h6>
+                            <p class="text-muted small text-center">Save directly to Google Drive or Dropbox</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 h-100 bg-white rounded border">
+                            <div class="tool-icon mx-auto">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <h6 class="text-center mb-2">Secure</h6>
+                            <p class="text-muted small text-center">Files processed in your browser only</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <!-- Ad Container -->
+                <div class="ad-container mb-4">
+                    <div class="ad-label">Advertisement</div>
+                    <div class="ad-placeholder">
+                        <div>Ad Space (300x250)</div>
+                    </div>
+                </div>
+                
+                <div class="p-3 mb-3 bg-white rounded border">
+                    <h5 class="mb-2"><i class="fas fa-tools me-2"></i>Other Tools</h5>
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-primary">
+                                    <i class="fas fa-file-image"></i>
+                                </div>
+                                <div>JPG to PDF</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-success">
+                                    <i class="fas fa-redo"></i>
+                                </div>
+                                <div>Rotate PDF</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-warning">
+                                    <i class="fas fa-compress-alt"></i>
+                                </div>
+                                <div>Compress PDF</div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 py-2">
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 text-danger">
+                                    <i class="fas fa-font"></i>
+                                </div>
+                                <div>OCR PDF</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="p-3 bg-white rounded border">
+                    <h5 class="mb-2"><i class="fas fa-lightbulb me-2"></i>Numbering Tips</h5>
+                    <ul class="small text-muted">
+                        <li class="mb-2">Use Roman numerals for preface/intro sections</li>
+                        <li class="mb-2">Position numbers at bottom center for formal documents</li>
+                        <li class="mb-2">Larger fonts work better for presentations</li>
+                        <li>Use transparent background for subtle numbering</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="py-3 mt-4 border-top">
+        <div class="container text-center">
+            <p class="text-muted small mb-0">&copy; 2023 PDF Toolkit Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+        // Set PDF.js worker path
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const fileInput = document.getElementById('fileInput');
+            const toolContainer = document.getElementById('toolContainer');
+            const previewContainer = document.getElementById('previewContainer');
+            const pdfViewport = document.getElementById('pdfViewport');
+            const pdfPagesContainer = document.getElementById('pdfPagesContainer');
+            const noPreviewMessage = document.getElementById('noPreviewMessage');
+            const numberPagesBtn = document.getElementById('numberPagesBtn');
+            const resetOptionsBtn = document.getElementById('resetOptionsBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressText = document.getElementById('progressText');
+            const resultContainer = document.getElementById('resultContainer');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const shareBtn = document.getElementById('shareBtn');
+            const newFileBtn = document.getElementById('newFileBtn');
+            const pageCount = document.getElementById('pageCount');
+            const saveToDriveBtn = document.getElementById('saveToDriveBtn');
+            const saveToDropboxBtn = document.getElementById('saveToDropboxBtn');
+            const pageNumberPreview = document.getElementById('pageNumberPreview');
+            const prevPageBtn = document.getElementById('prevPageBtn');
+            const nextPageBtn = document.getElementById('nextPageBtn');
+            const currentPageSpan = document.getElementById('currentPage');
+            const totalPagesSpan = document.getElementById('totalPages');
+            
+            // Numbering options elements
+            const numberFormat = document.getElementById('numberFormat');
+            const fontFamily = document.getElementById('fontFamily');
+            const fontSize = document.getElementById('fontSize');
+            const fontWeight = document.getElementById('fontWeight');
+            const textColor = document.getElementById('textColor');
+            const bgColor = document.getElementById('bgColor');
+            const showBackground = document.getElementById('showBackground');
+            const horizontalPos = document.getElementById('horizontalPos');
+            const verticalPos = document.getElementById('verticalPos');
+            const marginX = document.getElementById('marginX');
+            const marginY = document.getElementById('marginY');
+            
+            // State variables
+            let pdfBytes = null;
+            let pdfName = 'numbered-pages.pdf';
+            let pageCountValue = 0;
+            let currentPage = 1;
+            let pdfDoc = null;
+            let pdfImages = [];
+            
+            // Initialize the application
+            function init() {
+                // Event listeners
+                uploadBtn.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', handleFileSelect);
+                numberPagesBtn.addEventListener('click', addPageNumbers);
+                resetOptionsBtn.addEventListener('click', resetNumberingOptions);
+                downloadBtn.addEventListener('click', downloadPdf);
+                shareBtn.addEventListener('click', sharePdf);
+                newFileBtn.addEventListener('click', resetTool);
+                saveToDriveBtn.addEventListener('click', saveToGoogleDrive);
+                saveToDropboxBtn.addEventListener('click', saveToDropbox);
+                prevPageBtn.addEventListener('click', showPrevPage);
+                nextPageBtn.addEventListener('click', showNextPage);
+                
+                // Options change listeners
+                numberFormat.addEventListener('change', updatePreview);
+                fontFamily.addEventListener('change', updatePreview);
+                fontSize.addEventListener('change', updatePreview);
+                fontWeight.addEventListener('change', updatePreview);
+                textColor.addEventListener('change', updatePreview);
+                bgColor.addEventListener('change', updatePreview);
+                showBackground.addEventListener('change', updatePreview);
+                horizontalPos.addEventListener('change', updatePreview);
+                verticalPos.addEventListener('change', updatePreview);
+                marginX.addEventListener('change', updatePreview);
+                marginY.addEventListener('change', updatePreview);
+                
+                // Initial preview update
+                updatePreview();
+            }
+            
+            // Handle file selection
+            function handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                // Check if it's a PDF
+                if (!file.type.includes('pdf') && !file.name.toLowerCase().endsWith('.pdf')) {
+                    alert('Please select a PDF file');
+                    return;
+                }
+                
+                // Process the PDF
+                processPdf(file);
+            }
+            
+            // Process selected PDF
+            function processPdf(file) {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    pdfBytes = e.target.result;
+                    pdfName = file.name.replace(/\.[^/.]+$/, "") + '-numbered.pdf';
+                    
+                    // Show tool interface
+                    uploadArea.style.display = 'none';
+                    toolContainer.style.display = 'block';
+                    
+                    // Hide result container if shown
+                    resultContainer.style.display = 'none';
+                    
+                    // Load PDF for preview
+                    await loadPdfForPreview(pdfBytes);
+                    
+                    // Show first page
+                    currentPage = 1;
+                    showPage(currentPage);
+                };
+                reader.onerror = function() {
+                    console.error('Error reading file:', file.name);
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            
+            // Load PDF for preview using PDF.js
+            async function loadPdfForPreview(pdfData) {
+                try {
+                    // Clear previous preview
+                    pdfPagesContainer.innerHTML = '';
+                    
+                    // Load the PDF document
+                    pdfDoc = await pdfjsLib.getDocument({data: pdfData}).promise;
+                    pageCountValue = pdfDoc.numPages;
+                    totalPagesSpan.textContent = pageCountValue;
+                    
+                    // Enable/disable navigation buttons
+                    prevPageBtn.disabled = pageCountValue <= 1;
+                    nextPageBtn.disabled = pageCountValue <= 1;
+                    
+                    // Calculate the maximum width for pages to fit in the container
+                    const containerWidth = pdfViewport.clientWidth - 40; // Account for padding
+                    
+                    // Render all pages vertically
+                    for (let i = 1; i <= pageCountValue; i++) {
+                        const page = await pdfDoc.getPage(i);
+                        const viewport = page.getViewport({ scale: 1.0 });
+                        
+                        // Calculate scale to fit container width
+                        const scale = Math.min(1.0, containerWidth / viewport.width);
+                        const scaledViewport = page.getViewport({ scale: scale });
+                        
+                        // Create canvas for rendering
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = scaledViewport.height;
+                        canvas.width = scaledViewport.width;
+                        
+                        // Create container for this page
+                        const pageContainer = document.createElement('div');
+                        pageContainer.className = 'pdf-page-container';
+                        
+                        // Render PDF page to canvas
+                        await page.render({
+                            canvasContext: context,
+                            viewport: scaledViewport
+                        }).promise;
+                        
+                        // Create image element for the page
+                        const pageImg = document.createElement('img');
+                        pageImg.className = 'pdf-page';
+                        pageImg.src = canvas.toDataURL();
+                        pageImg.alt = `Page ${i}`;
+                        
+                        // Add image to page container
+                        pageContainer.appendChild(pageImg);
+                        
+                        // Add page container to preview
+                        pdfPagesContainer.appendChild(pageContainer);
+                    }
+                    
+                    // Show preview content
+                    noPreviewMessage.style.display = 'none';
+                    pdfPagesContainer.style.display = 'block';
+                    
+                    // Scroll to top
+                    pdfViewport.scrollTo(0, 0);
+                    
+                } catch (error) {
+                    console.error('Error loading PDF for preview:', error);
+                    alert('Error loading PDF for preview. Please try again.');
+                }
+            }
+            
+            // Show specific page in preview
+            function showPage(pageNumber) {
+                if (!pdfDoc || pageNumber < 1 || pageNumber > pageCountValue) return;
+                
+                currentPage = pageNumber;
+                currentPageSpan.textContent = currentPage;
+                
+                // Get the position of the page to scroll to
+                const pageContainers = document.querySelectorAll('.pdf-page-container');
+                if (pageContainers.length > 0 && pageNumber <= pageContainers.length) {
+                    const targetPage = pageContainers[pageNumber - 1];
+                    const containerTop = pdfViewport.getBoundingClientRect().top;
+                    const targetTop = targetPage.getBoundingClientRect().top;
+                    const scrollPosition = targetTop - containerTop + pdfViewport.scrollTop - 20;
+                    
+                    // Smooth scroll to the page
+                    pdfViewport.scrollTo({
+                        top: scrollPosition,
+                        behavior: 'smooth'
+                    });
+                }
+                
+                // Update navigation buttons
+                prevPageBtn.disabled = currentPage <= 1;
+                nextPageBtn.disabled = currentPage >= pageCountValue;
+            }
+            
+            // Show previous page
+            function showPrevPage() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                }
+            }
+            
+            // Show next page
+            function showNextPage() {
+                if (currentPage < pageCountValue) {
+                    currentPage++;
+                    showPage(currentPage);
+                }
+            }
+            
+            // Update the preview of page numbering
+            function updatePreview() {
+                // Update preview number text
+                let previewText = '1';
+                switch(numberFormat.value) {
+                    case 'i': previewText = 'i'; break;
+                    case 'I': previewText = 'I'; break;
+                    case 'a': previewText = 'a'; break;
+                    case 'A': previewText = 'A'; break;
+                }
+                pageNumberPreview.textContent = previewText;
+                
+                // Apply styling
+                pageNumberPreview.style.fontFamily = fontFamily.value;
+                pageNumberPreview.style.fontSize = `${fontSize.value}px`;
+                pageNumberPreview.style.fontWeight = fontWeight.value;
+                pageNumberPreview.style.color = textColor.value;
+                
+                if (showBackground.checked) {
+                    pageNumberPreview.style.backgroundColor = bgColor.value;
+                    pageNumberPreview.style.padding = '0.25rem 0.5rem';
+                } else {
+                    pageNumberPreview.style.backgroundColor = 'transparent';
+                    pageNumberPreview.style.padding = '0';
+                }
+                
+                // Position the preview
+                const marginXValue = marginX.value || 20;
+                const marginYValue = marginY.value || 20;
+                
+                pageNumberPreview.style.left = horizontalPos.value === 'left' ? `${marginXValue}px` : 
+                                             horizontalPos.value === 'right' ? `calc(100% - ${marginXValue}px - ${pageNumberPreview.offsetWidth}px)` : 
+                                             '50%';
+                pageNumberPreview.style.top = verticalPos.value === 'top' ? `${marginYValue}px` : 
+                                            `calc(100% - ${marginYValue}px - ${pageNumberPreview.offsetHeight}px)`;
+                
+                if (horizontalPos.value === 'center') {
+                    pageNumberPreview.style.transform = 'translateX(-50%)';
+                } else {
+                    pageNumberPreview.style.transform = 'none';
+                }
+            }
+            
+            // Reset numbering options to defaults
+            function resetNumberingOptions() {
+                numberFormat.value = '1';
+                fontFamily.value = 'Helvetica';
+                fontSize.value = '12';
+                fontWeight.value = 'normal';
+                textColor.value = '#000000';
+                bgColor.value = '#ffffff';
+                showBackground.checked = true;
+                horizontalPos.value = 'center';
+                verticalPos.value = 'bottom';
+                marginX.value = '20';
+                marginY.value = '20';
+                
+                updatePreview();
+            }
+            
+            // Add page numbers to the PDF
+            async function addPageNumbers() {
+                if (!pdfBytes) return;
+                
+                try {
+                    // Show progress
+                    progressContainer.style.display = 'block';
+                    resultContainer.style.display = 'none';
+                    numberPagesBtn.disabled = true;
+                    numberPagesBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Adding Numbers...';
+                    
+                    // Load the PDF
+                    const { PDFDocument, rgb, StandardFonts } = PDFLib;
+                    const pdfDoc = await PDFDocument.load(pdfBytes);
+                    const pages = pdfDoc.getPages();
+                    
+                    // Get the selected font
+                    let font;
+                    switch(fontFamily.value) {
+                        case 'Times-Roman':
+                            font = await pdfDoc.embedFont(StandardFonts.TimesRoman);
+                            break;
+                        case 'Courier':
+                            font = await pdfDoc.embedFont(StandardFonts.Courier);
+                            break;
+                        case 'Helvetica':
+                        default:
+                            font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+                    }
+                    
+                    // Parse color values
+                    const textColorValue = hexToRgb(textColor.value);
+                    const bgColorValue = hexToRgb(bgColor.value);
+                    
+                    // Process each page
+                    for (let i = 0; i < pages.length; i++) {
+                        const page = pages[i];
+                        const { width, height } = page.getSize();
+                        
+                        // Format the page number
+                        let pageNumberText = formatPageNumber(i + 1);
+                        
+                        // Calculate position
+                        const marginXValue = parseInt(marginX.value) || 20;
+                        const marginYValue = parseInt(marginY.value) || 20;
+                        const textWidth = font.widthOfTextAtSize(pageNumberText, parseInt(fontSize.value));
+                        
+                        let x, y;
+                        
+                        // Horizontal position
+                        if (horizontalPos.value === 'left') {
+                            x = marginXValue;
+                        } else if (horizontalPos.value === 'right') {
+                            x = width - marginXValue - textWidth;
+                        } else { // center
+                            x = (width - textWidth) / 2;
+                        }
+                        
+                        // Vertical position
+                        if (verticalPos.value === 'top') {
+                            y = height - marginYValue - parseInt(fontSize.value);
+                        } else { // bottom
+                            y = marginYValue;
+                        }
+                        
+                        // Draw background if enabled
+                        if (showBackground.checked) {
+                            const padding = 4;
+                            const bgWidth = textWidth + (padding * 2);
+                            const bgHeight = parseInt(fontSize.value) + (padding * 2);
+                            
+                            page.drawRectangle({
+                                x: x - padding,
+                                y: y - padding,
+                                width: bgWidth,
+                                height: bgHeight,
+                                color: rgb(bgColorValue.r / 255, bgColorValue.g / 255, bgColorValue.b / 255),
+                                opacity: 0.8,
+                            });
+                        }
+                        
+                        // Draw the page number
+                        page.drawText(pageNumberText, {
+                            x,
+                            y,
+                            size: parseInt(fontSize.value),
+                            font,
+                            color: rgb(textColorValue.r / 255, textColorValue.g / 255, textColorValue.b / 255),
+                            opacity: 1,
+                        });
+                        
+                        // Update progress
+                        const percent = Math.round(((i + 1) / pages.length) * 100);
+                        progressBar.style.width = `${percent}%`;
+                        progressPercent.textContent = `${percent}%`;
+                    }
+                    
+                    // Save the modified PDF
+                    const modifiedPdfBytes = await pdfDoc.save();
+                    pdfBytes = modifiedPdfBytes;
+                    
+                    // Show result
+                    progressContainer.style.display = 'none';
+                    resultContainer.style.display = 'block';
+                    pageCount.textContent = `${pages.length} page${pages.length !== 1 ? 's' : ''} numbered`;
+                    
+                    // Update cloud storage links
+                    updateCloudStorageLinks(pdfBytes);
+                    
+                    // Reload PDF for preview
+                    await loadPdfForPreview(pdfBytes);
+                    showPage(1);
+                    
+                } catch (error) {
+                    console.error('Error adding page numbers:', error);
+                    alert('Error adding page numbers. Please try again.');
+                } finally {
+                    numberPagesBtn.disabled = false;
+                    numberPagesBtn.innerHTML = '<i class="fas fa-sort-numeric-up me-1"></i>Number Pages';
+                }
+            }
+            
+            // Format page number according to selected format
+            function formatPageNumber(number) {
+                switch(numberFormat.value) {
+                    case 'i': return toRoman(number).toLowerCase();
+                    case 'I': return toRoman(number);
+                    case 'a': return toAlpha(number).toLowerCase();
+                    case 'A': return toAlpha(number);
+                    default: return number.toString();
+                }
+            }
+            
+            // Convert number to Roman numerals
+            function toRoman(num) {
+                if (num < 1 || num > 3999) return num.toString();
+                
+                const romanNumerals = [
+                    ['M', 1000], ['CM', 900], ['D', 500], ['CD', 400],
+                    ['C', 100], ['XC', 90], ['L', 50], ['XL', 40],
+                    ['X', 10], ['IX', 9], ['V', 5], ['IV', 4], ['I', 1]
+                ];
+                
+                let result = '';
+                for (const [letter, value] of romanNumerals) {
+                    while (num >= value) {
+                        result += letter;
+                        num -= value;
+                    }
+                }
+                return result;
+            }
+            
+            // Convert number to alphabetical (A, B, C, ..., AA, AB, etc.)
+            function toAlpha(num) {
+                let result = '';
+                while (num > 0) {
+                    const remainder = (num - 1) % 26;
+                    result = String.fromCharCode(65 + remainder) + result;
+                    num = Math.floor((num - 1) / 26);
+                }
+                return result || 'A';
+            }
+            
+            // Convert hex color to RGB
+            function hexToRgb(hex) {
+                // Remove # if present
+                hex = hex.replace('#', '');
+                
+                // Parse r, g, b values
+                const bigint = parseInt(hex, 16);
+                const r = (bigint >> 16) & 255;
+                const g = (bigint >> 8) & 255;
+                const b = bigint & 255;
+                
+                return { r, g, b };
+            }
+            
+            // Update cloud storage links with the PDF
+            function updateCloudStorageLinks(pdfBytes) {
+                // Create a blob URL for the PDF
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const pdfUrl = URL.createObjectURL(blob);
+                
+                // Google Drive
+                saveToDriveBtn.href = `https://drive.google.com/u/0/get_video_info?docid=`;
+                saveToDriveBtn.onclick = (e) => {
+                    e.preventDefault();
+                    window.open(`https://drive.google.com/drive/u/0/my-drive?upload=true&usp=upload_widget&url=${encodeURIComponent(pdfUrl)}&title=${encodeURIComponent(pdfName)}`, '_blank');
+                };
+                
+                // Dropbox
+                saveToDropboxBtn.href = '#';
+                saveToDropboxBtn.onclick = (e) => {
+                    e.preventDefault();
+                    const dropboxScript = document.createElement('script');
+                    dropboxScript.type = 'text/javascript';
+                    dropboxScript.src = 'https://www.dropbox.com/static/api/2/dropins.js';
+                    dropboxScript.setAttribute('data-app-key', 'YOUR_DROPBOX_APP_KEY');
+                    dropboxScript.onload = function() {
+                        Dropbox.save({
+                            files: [{
+                                url: pdfUrl,
+                                filename: pdfName
+                            }],
+                            success: function() {
+                                console.log('File saved to Dropbox');
+                            },
+                            progress: function(progress) {
+                                console.log('Upload progress:', progress);
+                            },
+                            cancel: function() {
+                                console.log('Upload cancelled');
+                            },
+                            error: function(error) {
+                                console.error('Dropbox error:', error);
+                            }
+                        });
+                    };
+                    document.body.appendChild(dropboxScript);
+                };
+            }
+            
+            // Download the generated PDF
+            function downloadPdf() {
+                if (!pdfBytes) return;
+                
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                saveAs(blob, pdfName);
+            }
+            
+            // Share the PDF
+            function sharePdf() {
+                if (!pdfBytes) return;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Numbered PDF',
+                        text: 'Check out this PDF with page numbers added',
+                        files: [new File([pdfBytes], pdfName, { type: 'application/pdf' })]
+                    }).catch(error => {
+                        console.error('Error sharing:', error);
+                        alert('Sharing failed. Please download the file instead.');
+                    });
+                } else {
+                    alert('Web Share API not supported in your browser. Please download the file.');
+                }
+            }
+            
+            // Save to Google Drive
+            function saveToGoogleDrive(e) {
+                e.preventDefault();
+                if (!pdfBytes) return;
+                
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const pdfUrl = URL.createObjectURL(blob);
+                
+                window.open(`https://drive.google.com/drive/u/0/my-drive?upload=true&usp=upload_widget&url=${encodeURIComponent(pdfUrl)}&title=${encodeURIComponent(pdfName)}`, '_blank');
+            }
+            
+            // Save to Dropbox
+            function saveToDropbox(e) {
+                e.preventDefault();
+                if (!pdfBytes) return;
+                
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const pdfUrl = URL.createObjectURL(blob);
+                
+                const dropboxScript = document.createElement('script');
+                dropboxScript.type = 'text/javascript';
+                dropboxScript.src = 'https://www.dropbox.com/static/api/2/dropins.js';
+                dropboxScript.setAttribute('data-app-key', 'YOUR_DROPBOX_APP_KEY');
+                dropboxScript.onload = function() {
+                    Dropbox.save({
+                        files: [{
+                            url: pdfUrl,
+                            filename: pdfName
+                        }],
+                        success: function() {
+                            console.log('File saved to Dropbox');
+                        },
+                        progress: function(progress) {
+                            console.log('Upload progress:', progress);
+                        },
+                        cancel: function() {
+                            console.log('Upload cancelled');
+                        },
+                        error: function(error) {
+                            console.error('Dropbox error:', error);
+                        }
+                    });
+                };
+                document.body.appendChild(dropboxScript);
+            }
+            
+            // Reset the tool
+            function resetTool() {
+                // Reset state
+                pdfBytes = null;
+                pdfName = 'numbered-pages.pdf';
+                pageCountValue = 0;
+                currentPage = 1;
+                pdfDoc = null;
+                fileInput.value = '';
+                
+                // Reset UI
+                toolContainer.style.display = 'none';
+                uploadArea.style.display = 'block';
+                progressContainer.style.display = 'none';
+                resultContainer.style.display = 'none';
+                pdfPagesContainer.style.display = 'none';
+                noPreviewMessage.style.display = 'block';
+                pdfPagesContainer.innerHTML = '';
+                
+                // Reset buttons
+                numberPagesBtn.disabled = false;
+                numberPagesBtn.innerHTML = '<i class="fas fa-sort-numeric-up me-1"></i>Number Pages';
+                
+                // Reset numbering options
+                resetNumberingOptions();
+            }
+            
+            // Initialize the application
+            init();
+        });
+    </script>
+</body>
+</html>
